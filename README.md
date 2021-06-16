@@ -56,7 +56,7 @@ ___________________________________________________________________________
 
 Please Feel Free to Reach Out if You Have Any Questions:
 
-* Name: Siddhesh Agarwal
+* Name: [Siddhesh Agarwal](https://www.github.com/Siddhesh-Agarwal)
 * E-mail: Siddhesh.agarwal@gmail.com
 
 ___________________________________________________________________________
