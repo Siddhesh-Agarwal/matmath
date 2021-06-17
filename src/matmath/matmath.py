@@ -1,4 +1,4 @@
-from warnings import UserWarning
+from warnings import showwarning
 
 ################################################################################
 ##                               Basic Matrices                               ##
@@ -34,17 +34,17 @@ def Null(a, n, m = 0):
 def compatAS(a, b):
     if isMatrix(a) and isMatrix(b):
         return False if len(a) != len(b) or len(a[0]) != len(b[0]) else True
-    UserWarning("Error: The given parameter is not a matrix.")
+    showwarning("Error: The given parameter is not a matrix.", UserWarning, str, 37)
 
 # Returns True if matrices are compatible for multiplication else returns False.
 def compatM(A, B):
     if isMatrix(A) and isMatrix(B):
         return True if len(A[0]) == len(B) else False
-    UserWarning("Error: The given parameter is not a matrix.")
+    showwarning("Error: The given parameter is not a matrix.", UserWarning, str, 43)
 
 
 ################################################################################
-##                           Arithamatic Operations                           ##
+##                           Arithmetic  Operations                           ##
 ################################################################################
 
 # Returns the sum matrix (A + B), provided the matrices are compatible.
@@ -56,7 +56,7 @@ def matAdd(a, b):
             for j in range( len(a[i]) ):
                 matrix[i].append( a[i][j] + b[i][j] )
         return matrix
-    UserWarning( "Error: matrices do not have same order.")
+    showwarning("Error: matrices do not have same order.", UserWarning, str, 59)
 
 # Returns the difference matrix (A - B), provided the matrices are compatible.
 def matSub(a, b):
@@ -77,7 +77,7 @@ def matMul(a, b):
                     total += (a[i][k] * b[k][j])
                 matrix[i].append( total )
         return matrix
-    UserWarning("Error: matrices not compatible for multiplication.")
+    showwarning("Error: matrices not compatible for multiplication.", UserWarning, str, 80)
 
 # Returns the matrix representing the n^th power of matrix A, provided the matrix is square matrix.
 def power(a, n):
@@ -86,7 +86,7 @@ def power(a, n):
         for _ in range( n - 1 ):
             matrix = matMul(a, matrix)
         return matrix
-    UserWarning("Error: The given matrix is not square.")
+    showwarning("Error: The given matrix is not square.", UserWarning, str, 89)
     
 # Returns the scalar product of A and n (nA).
 def scalarMul(a, n=1):
@@ -136,7 +136,7 @@ def adj(A, mul_factor=1):
             for j in range(len(A)):
                 matrix[i].append(float(det(cut(A, i , j))))
         return transpose(matrix, mul_factor)
-    UserWarning("Error: The given matrix is not square.")
+    showwarning("Error: The given matrix is not square.", UserWarning, str, 139)
 
 # Returns the inverse of the matrix (if and only if the matrices are compatible) multiplied by the multiplication factor. Default value of mul_factor (multiplication factor) is 1.
 def inv(A, mul_factor=1):
@@ -147,7 +147,7 @@ def inv(A, mul_factor=1):
             for j in range(len(A)):
                 matrix[i].append(adj(A, mul_factor)[i][j])
         return matrix
-    UserWarning("Error: The given matrix is not square.")
+    showwarning("Error: The given matrix is not square.", UserWarning, str, 150)
 
 
 ################################################################################
@@ -169,7 +169,7 @@ def det(a, mul_factor=1):
         for i in range(length):
             det *= a[i][i]
         return det
-    UserWarning("Error: The given matrix is not square.")
+    showwarning("Error: The given matrix is not square.", UserWarning, str, 172)
 
 # Returns the trace of the matrix (i.e the product of elements on the diagonal) if possible.
 def trace(A):
