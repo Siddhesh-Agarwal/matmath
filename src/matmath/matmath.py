@@ -177,7 +177,7 @@ def trace(A):
         Trace = 1
         for i in range(len(A)): Trace *= A[i][i]
         return Trace
-    UserWarning("Error: The given matrix is not square.")
+    showwarning("Error: The given matrix is not square.", UserWarning, str, 180)
 
 # Returns the order of the matrix as a tuple (rows, columns).
 def order(A):
