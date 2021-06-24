@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+setup.py
+src/matmath/__init__.py
+src/matmath/matmath.py
+src/matmath.egg-info/PKG-INFO
+src/matmath.egg-info/SOURCES.txt
+src/matmath.egg-info/dependency_links.txt
+src/matmath.egg-info/top_level.txt
+test/test_1.py
