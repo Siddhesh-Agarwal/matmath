@@ -1,29 +1,19 @@
-from warnings import showwarning
-
 ################################################################################
 ##                               Basic Matrices                               ##
 ################################################################################
 
-# Returns an identity matrix of order N x N multiplied by the multiplication factor. Default value of mul_factor(multiplication factor) is 1.
-def Identity(n, mul_factor = 1):
-    imatrix = []
-    for i in range(n):
-        temp = []
-        for j in range(n):
-            if i == j: temp.append(mul_factor)
-            else: temp.append(0)
-        imatrix.append(temp)
-    return imatrix
-
 # Returns a null matrix of order N x M. If only 1 parameter is given, returns a null matrix of order N x N.
-def Null(a, n, m = 0):
-    if m == 0: m = n
-    zmatrix = []
-    for i in range( n ):
-        zmatrix.append( [] )
-        for j in range( m ):
-            zmatrix[i].append( 0 )
-    return zmatrix
+def Null(n, m=None):
+    if m == None: m = n
+    null_matrix = [[0]*m for _ in range(n)]
+    return null_matrix
+
+# Returns an identity matrix of order N x N multiplied by the multiplication factor. Default value of mul_factor(multiplication factor) is 1.
+def Identity(n, mul_factor=1):
+    identity_matrix = Null(n)
+    for i in range(n):
+        identity_matrix[i][i] = mul_factor
+    return identity_matrix
 
 
 ################################################################################
@@ -34,36 +24,40 @@ def Null(a, n, m = 0):
 def compatAS(a, b):
     if isMatrix(a) and isMatrix(b):
         return False if len(a) != len(b) or len(a[0]) != len(b[0]) else True
-    showwarning("Error: The given parameter is not a matrix.", UserWarning, str, 37)
+    raise ValueError("The given parameter is not a matrix.")
 
 # Returns True if matrices are compatible for multiplication else returns False.
 def compatM(A, B):
     if isMatrix(A) and isMatrix(B):
         return True if len(A[0]) == len(B) else False
-    showwarning("Error: The given parameter is not a matrix.", UserWarning, str, 43)
+    raise ValueError("The given parameter is not a matrix.")
 
 
 ################################################################################
 ##                           Arithmetic  Operations                           ##
 ################################################################################
 
-# Returns the sum matrix (A + B), provided the matrices are compatible.
+# Returns the sum matrix (A+B), provided the matrices are compatible.
 def matAdd(a, b):
     if compatAS(a, b):
         matrix = []
-        for i in range( len(a) ):
-            matrix.append( [] )
-            for j in range( len(a[i]) ):
-                matrix[i].append( a[i][j] + b[i][j] )
+        for i in range(len(a)):
+            matrix.append([])
+            temp = [(a[i][j] + b[i][j]) for j in range(len(a[0]))]
+            matrix.append(temp)
         return matrix
-    showwarning("Error: matrices do not have same order.", UserWarning, str, 59)
+    raise ValueError("The 2 matrices do not have the same order.")
 
-# Returns the difference matrix (A - B), provided the matrices are compatible.
+# Returns the difference matrix (A-B), provided the matrices are compatible.
 def matSub(a, b):
-    for i in range( len(b) ):
-        for j in range( len(b[i]) ):
-            b[i][j] *= -1
-    return matAdd(a, b)
+    if compatAS(a, b):
+        matrix = []
+        for i in range(len(a)):
+            matrix.append([])
+            temp = [(a[i][j] - b[i][j]) for j in range(len(a[0]))]
+            matrix.append(temp)
+        return matrix
+    raise ValueError("The 2 matrices do not have the same order.")
 
 # Returns the product matrix (AB), provided the matrices are compatible.
 def matMul(a, b):
@@ -77,16 +71,16 @@ def matMul(a, b):
                     total += (a[i][k] * b[k][j])
                 matrix[i].append( total )
         return matrix
-    showwarning("Error: matrices not compatible for multiplication.", UserWarning, str, 80)
+    raise ValueError("The 2 matrices are not compatible for multiplication.")
 
 # Returns the matrix representing the n^th power of matrix A, provided the matrix is square matrix.
 def power(a, n):
     if isSquare(a):
         matrix = a
-        for _ in range( n - 1 ):
+        for _ in range(n-1):
             matrix = matMul(a, matrix)
         return matrix
-    showwarning("Error: The given matrix is not square.", UserWarning, str, 89)
+    raise ValueError("The given matrix is not a square matrix.")
     
 # Returns the scalar product of A and n (nA).
 def scalarMul(a, n=1):
@@ -114,9 +108,12 @@ def rotate(A, turns=1):
     turns = turns % 4
     if turns == 0:
         return A
+    elif turns == 2:
+        Rotated_A = [i[::-1] for i in A]
+        return rotate(Rotated_A, turns-2)
     else:
         Rotated_A = [[A[j][i] for j in range(len(A[i]))][::-1] for i in range(len(A))]
-        return rotate(Rotated_A, turns - 1)
+        return rotate(Rotated_A, turns-1)
 
 # Returns the transpose of the matrix.
 def transpose(A, mul_factor=1):
@@ -136,18 +133,17 @@ def adj(A, mul_factor=1):
             for j in range(len(A)):
                 matrix[i].append(float(det(cut(A, i , j))))
         return transpose(matrix, mul_factor)
-    showwarning("Error: The given matrix is not square.", UserWarning, str, 139)
+    raise ValueError("The given matrix is not a square matrix.")
 
 # Returns the inverse of the matrix (if and only if the matrices are compatible) multiplied by the multiplication factor. Default value of mul_factor (multiplication factor) is 1.
 def inv(A, mul_factor=1):
     if isSquare(A):
         matrix = []
         for i in range(len(A)):
-            matrix.append([])
-            for j in range(len(A)):
-                matrix[i].append(adj(A, mul_factor)[i][j])
+            temp =  [adj(A, mul_factor)[i][j] for j in range(len(A))]
+            matrix.append(temp)
         return matrix
-    showwarning("Error: The given matrix is not square.", UserWarning, str, 150)
+    raise ValueError("The given matrix is not a square matrix.")
 
 
 ################################################################################
@@ -169,7 +165,7 @@ def det(a, mul_factor=1):
         for i in range(length):
             det *= a[i][i]
         return det
-    showwarning("Error: The given matrix is not square.", UserWarning, str, 172)
+    raise ValueError("The given matrix is not a square matrix.")
 
 # Returns the trace of the matrix (i.e the product of elements on the diagonal) if possible.
 def trace(A):
@@ -177,7 +173,7 @@ def trace(A):
         Trace = 1
         for i in range(len(A)): Trace *= A[i][i]
         return Trace
-    showwarning("Error: The given matrix is not square.", UserWarning, str, 180)
+    raise ValueError("The given matrix is not a square matrix.")
 
 # Returns the order of the matrix as a tuple (rows, columns).
 def order(A):
@@ -241,15 +237,14 @@ def isDiagonal(A):
 
 # Returns True if matrix is a square matrix else returns False.
 def isSquare(A):
-    for i in A:
-        if len(i) != len(A):
-            return False
-    return True
+    if isMatrix(A):
+        return len(A[0]) == len(A)
+    raise ValueError("The given matrix is not a square matrix.")
 
 # Returns True if matrix is an upper triangular matrix else returns False.
 def isUTriangular(A):
-    for i in range( len(A) ):
-        for j in range( len(A) ):
+    for i in range(len(A)):
+        for j in range(len(A)):
             try:
                 if A[i][j] != 0 and i > j:
                     return False
