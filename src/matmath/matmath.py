@@ -177,7 +177,7 @@ def trace(A):
 
 # Returns the order of the matrix as a tuple (rows, columns).
 def order(A):
-    return tuple(len(A), len(A[0]))
+    return (len(A), len(A[0]))
 
 
 ################################################################################ 
