@@ -17,3 +17,7 @@ _______________________________
 - Replaced warnings with errors (ValueError).
 - Improved efficiency of `Null()`, `Identity()` and `matSub()`.
 - Reduced SLOC.
+
+## 24 June 2021 - v1.1.1
+
+- fixed `order()` function.
