@@ -52,11 +52,17 @@ ___________________________________________________________________________
 
 ___________________________________________________________________________
 
+## Upcoming
+
+Vector Support for 2D and above.
+
+___________________________________________________________________________
+
 ## Contact
 
 Please Feel Free to Reach Out if You Have Any Questions:
 
-* Name: [Siddhesh Agarwal](https://www.github.com/Siddhesh-Agarwal)
+* Name: Siddhesh Agarwal
 * E-mail: Siddhesh.agarwal@gmail.com
 
 ___________________________________________________________________________
