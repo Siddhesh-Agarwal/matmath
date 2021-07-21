@@ -12,7 +12,7 @@ To install the library:
     pip install matmath
 
 ___________________________________________________________________________
-
+<!--
 ## General usage notes
 
 * This module is meant for matrix manipulation and can carry out various operations. The **matmath mmodule** can carry various mathematical operations like addition, subtraction, multiplication and exponentiation along with Matrix-defined function like inverse, rotation, transpose, etc.
@@ -21,6 +21,7 @@ ___________________________________________________________________________
 * a few functions (example - `matAdd()`, `matSub()`, `matMul()`, `adj()`, `det()` and `inverse()`) may throw an error due to incompatibility of the matrices with the function.
 
 ___________________________________________________________________________
+-->
 
 ## Functions and their uses
 
