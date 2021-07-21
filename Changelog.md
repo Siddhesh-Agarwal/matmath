@@ -21,3 +21,7 @@ _______________________________
 ## 24 June 2021 - v1.1.1
 
 - fixed `order()` function.
+
+## 21 July 2021 - v2.0.0
+
+- added vector support by creating class `Vector`.
