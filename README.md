@@ -15,6 +15,8 @@ ___________________________________________________________________________
 <!--
 ## General usage notes
 
+Test message
+
 * This module is meant for matrix manipulation and can carry out various operations. The **matmath mmodule** can carry various mathematical operations like addition, subtraction, multiplication and exponentiation along with Matrix-defined function like inverse, rotation, transpose, etc.
 * It can also be used in finding determinant, inverse, transpose and adjoin of a matrix.
 * The matrix/matrices should contain **only numbers** (i.e. `<class 'int'>`, `<class 'float'>` or `<class 'complex'>`) and not letters (i.e `<class 'str'>`) in order to avoid error.
