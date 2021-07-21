@@ -13,7 +13,7 @@ setup(
     project_urls = {
         'Bug Tacker': 'https://github.com/Siddhesh-Agarwal/matmath/issues'
     },
-    keywords = ["matmath", "math", "matrix", "matrices"],
+    keywords = ["matmath", "math", "matrix", "matrices", "vector"],
     classifiers = [
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
