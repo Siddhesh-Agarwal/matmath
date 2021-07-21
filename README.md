@@ -7,6 +7,9 @@ ___________________________________________________________________________
 ## Installing under Python
 
 When installing the **matmath module** for python, it is recommended that you check if you have **python 3.6 or above**.
+To install the library:
+
+    pip install matmath
 
 ___________________________________________________________________________
 
