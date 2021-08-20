@@ -71,7 +71,7 @@ ___________________________________________________________________________
 | cross_product | Cross product of the vector with respect to another vector. |
 | __add__       | Adds the 2 vectors                                          |
 | __sub__       | Subtracts the second vector from the first vector.          |
-| __mul__       | Alias of `cross_product`.                                   |
+| __mul__       | Alias of `cross_product()`.                                 |
 
 ___________________________________________________________________________
 
