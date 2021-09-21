@@ -23,7 +23,13 @@ class Vector:
 
 
     def modulus(self):
-        """Returns the modulus (length/magnitude) of the vector."""
+        """Returns the modulus (length/magnitude) of the vector.
+
+        Returns
+        -------
+        float
+            magnitude of the length of the vector.
+        """
 
         Squared = [i**2 for i in self.vector]
         return sqrt(sum(Squared))
@@ -32,8 +38,14 @@ class Vector:
     def argument(self):
         """Returns the argument of the vector.
 
-        Raises: 
-            ValueError: Raised if the dimension of vector is not equal to 2.    
+        Returns
+        -------
+        float
+            angle which the vector is making with respect to thepositive x-axis
+
+        Raises
+        ------
+        ValueError: Raised if the dimension of vector is not equal to 2.    
         """
 
         if self.__len__() == 2:
@@ -42,7 +54,13 @@ class Vector:
 
 
     def unitVector(self):
-        """Returns the unit vector in the direction of the given vector."""
+        """Returns the unit vector of the given vector.
+
+        Returns
+        -------
+        Vector
+            A vector of magnitude equal to 1 in the same direction as the given vector.
+        """
 
         mod = self.modulus()
         UnitVector = []
@@ -56,8 +74,15 @@ class Vector:
     def magnify(self, magnification=1):
         """Returns the scaled up or scaled down version of the vector.
 
-        Args:
-            magnification (int/float, optional): The scale of magnification of the vector. Defaults to 1.
+        Parameter
+        ---------
+        magnification (int/float, optional)
+            The scale of magnification of the vector. Defaults to 1.
+
+        Returns
+        -------
+        Vector
+            A vector (whose magnitude = magnitude of original vector * magnification) in the same direction as the given vector.
         """
 
         NewVector = []
@@ -69,12 +94,16 @@ class Vector:
     def rotate(self, theta=0, radians=True):
         """Rotates the given vector by the given angle in clockwise direction.
 
-        Args:
-            theta (int/float, optional): The angle of rotation (in radians). Defaults to 0.
-            radians (bool, optional)   : Unit of theta. radians (True) or degrees (False). Defaults to True.
+        Parameters
+        ----------
+        theta (int/float, optional)
+            The angle of rotation (in radians). Defaults to 0.
+        radians (bool, optional)
+            Unit of theta. radians (True) or degrees (False). Defaults to True.
 
-        Raises: 
-            ValueError: Raised if the dimension of vector is not equal to 2.
+        Raises 
+        ------
+        ValueError: Raised if the dimension of vector is not equal to 2.
         """
 
         if self.__len__() == 2:
@@ -91,11 +120,19 @@ class Vector:
     def dot_product(self, other):
         """Multiplies 2 vectors of the same dimension.
 
-        Args:
-            other (Vector, compulsory): The second vector.
+        Parameters
+        ----------
+        other (Vector, compulsory)
+            The second vector.
 
-        Raises:
-            ValueError: Raised if the dimension of vectors are not equal.
+        Returns
+        -------
+        Vector
+            Dot product of the 2 vectors.
+
+        Raises
+        ------
+        ValueError: Raised if the dimension of vectors are not equal.
         """
 
         if len(self) == len(other):
@@ -109,13 +146,22 @@ class Vector:
     def cross_product(self, other):
         """Returns the cross product of 2 vectors.
 
-        Args:
-            other (Vector, compulsory): The second vector
+        Parameters
+        ----------
+        other (Vector, compulsory)
+            The second vector.
 
-        Raises:
-            ValueError: Raised if the dimension of vectors are not equal.
-            ValueError: Raised if the dimension of vectors is not equal to 2 or 3.
+        Returns
+        -------
+        Vector
+            Cross product of the 2 vectors.
+
+        Raises
+        ------
+        ValueError: Raised if the dimension of vectors are not equal.
+        ValueError: Raised if the dimension of vectors is not equal to 2 or 3.
         """
+
         if self.__len__() == len(other):
             if self.__len__() == 3:
                 a1, a2, a3 = self
@@ -132,11 +178,19 @@ class Vector:
     def __add__(self, other):
         """Adds 2 vectors of the same dimension.
 
-        Args:
-            other (Vector, compulsory): The second vector.
+        Parameters
+        ----------
+        other (Vector, compulsory)
+            The second vector.
 
-        Raises:
-            ValueError: Raised if the dimension of vectors are not equal.
+        Returns
+        -------
+        Vector
+            Sum of 2 vectors.
+
+        Raises
+        ------
+        ValueError: Raised if the dimension of vectors are not equal.
         """
 
         if len(self) == len(other):
@@ -150,11 +204,19 @@ class Vector:
     def __sub__(self, other):
         """Subtracts 2 vectors of the same dimension.
 
-        Args:
-            other (Vector, compulsory): The second vector.
+        Parameters
+        ----------
+        other (Vector, compulsory)
+            The second vector.
+            
+        Returns
+        -------
+        Vector
+            Difference of 2 vectors.
 
-        Raises:
-            ValueError: Raised if the dimension of vectors are not equal.
+        Raises
+        ------
+        ValueError: Raised if the dimension of vectors are not equal.
         """
 
         if len(self) == len(other):
@@ -168,15 +230,24 @@ class Vector:
     def __mul__(self, other):
         """Returns the cross product of 2 vectors.
 
-        Args:
-            other (Vector, compulsory): The second vector
+        Parameters
+        ----------
+        other (Vector, compulsory)
+            The second vector.
 
-        Raises:
-            ValueError: Raised if the dimension of vectors are not equal.
-            ValueError: Raised if the dimension of vectors is not equal to 2 or 3.
+        Returns
+        -------
+        Vector
+            Cross product of the 2 vectors.
 
-        Alias: 
-            cross_product()
+        Raises
+        ------
+        ValueError: Raised if the dimension of vectors are not equal.
+        ValueError: Raised if the dimension of vectors is not equal to 2 or 3.
+
+        Alias
+        -----
+        cross_product()
         """
 
         return self.cross_product(other)
