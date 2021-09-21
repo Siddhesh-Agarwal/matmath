@@ -25,7 +25,3 @@ _______________________________
 ## 21 July 2021 - v2.0.0
 
 - Added vector support by creating class `Vector`.
-
-## Date - v2.1.0
-
-- Increased speed by replacing lists with numpy arrays.
