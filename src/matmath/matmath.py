@@ -1,5 +1,3 @@
-import numpy as np
-
 ################################################################################
 ##                               Basic Matrices                               ##
 ################################################################################
@@ -7,11 +5,12 @@ import numpy as np
 # Returns a null matrix of order N x M. If only 1 parameter is given, returns a null matrix of order N x N.
 def Null(n, m=None):
     if m == None: m = n
-    return np.zeros((n, m))
+    null_matrix = [[0]*m for _ in range(n)]
+    return null_matrix
 
 # Returns an identity matrix of order N x N multiplied by the multiplication factor. Default value of mul_factor(multiplication factor) is 1.
 def Identity(n, mul_factor=1):
-    identity_matrix = Null(n, n)
+    identity_matrix = Null(n)
     for i in range(n):
         identity_matrix[i][i] = mul_factor
     return identity_matrix
