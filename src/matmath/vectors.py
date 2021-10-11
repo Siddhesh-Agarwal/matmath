@@ -1,179 +1,33 @@
-from math import pi, cos, sin, atan, sqrt
+from math import pi, cos, sin, asin, sqrt
 
 class Vector:
     def __init__(self, *args):
         """Creates a vector out of the given args."""
-        self.vector = args
-
+        if len(args) > 1:
+            self.vector = list(args)
+        elif len(args) == 1 and type(args[0]) not in [int, float]:
+            self.vector = list(args[0])
+        else:
+            raise ValueError("Vector takes atleast 2 arguements only 1 given.")
 
     def __iter__(self):
         return self.vector.__iter__()
 
-
     def __len__(self):
-        return len(self.vector)
+        """returns the number of elements in the vector."""
+        length = 0
+        for _ in self.vector:
+            length += 1
+        return length
 
+    def __setitem__(self, key, value):
+        self.vector[key] = value
 
     def __getitem__(self, key):
         return self.vector[key]
 
-
     def __repr__(self):
-        return str(self.vector)
-
-
-    def modulus(self):
-        """Returns the modulus (length/magnitude) of the vector.
-
-        Returns
-        -------
-        float
-            magnitude of the length of the vector.
-        """
-
-        Squared = [i**2 for i in self.vector]
-        return sqrt(sum(Squared))
-
-
-    def argument(self):
-        """Returns the argument of the vector.
-
-        Returns
-        -------
-        float
-            angle which the vector is making with respect to thepositive x-axis
-
-        Raises
-        ------
-        ValueError: Raised if the dimension of vector is not equal to 2.    
-        """
-
-        if self.__len__() == 2:
-            return atan(self.vector[1] / self.vector[0])
-        raise ValueError("The dimension of the vector must be 2.")
-
-
-    def unitVector(self):
-        """Returns the unit vector of the given vector.
-
-        Returns
-        -------
-        Vector
-            A vector of magnitude equal to 1 in the same direction as the given vector.
-        """
-
-        mod = self.modulus()
-        UnitVector = []
-        if mod == 0:
-            return self
-        for element in self.vector:
-            UnitVector.append(element / mod)
-        return UnitVector
-
-
-    def magnify(self, magnification=1):
-        """Returns the scaled up or scaled down version of the vector.
-
-        Parameter
-        ---------
-        magnification (int/float, optional)
-            The scale of magnification of the vector. Defaults to 1.
-
-        Returns
-        -------
-        Vector
-            A vector (whose magnitude = magnitude of original vector * magnification) in the same direction as the given vector.
-        """
-
-        NewVector = []
-        for element in self.vector:
-            NewVector.append(element * magnification)
-        return NewVector
-
-
-    def rotate(self, theta=0, radians=True):
-        """Rotates the given vector by the given angle in clockwise direction.
-
-        Parameters
-        ----------
-        theta (int/float, optional)
-            The angle of rotation (in radians). Defaults to 0.
-        radians (bool, optional)
-            Unit of theta. radians (True) or degrees (False). Defaults to True.
-
-        Raises 
-        ------
-        ValueError: Raised if the dimension of vector is not equal to 2.
-        """
-
-        if self.__len__() == 2:
-            x = self.vector[0]
-            y = self.vector[1]
-            if not radians:
-                theta = theta * 180 / pi
-            new_x = x * cos(theta) - y * sin(theta)
-            new_y = x * sin(theta) + y * cos(theta)
-            return [new_x, new_y]
-        raise ValueError("The dimension of the vector must be 2.")
-
-
-    def dot_product(self, other):
-        """Multiplies 2 vectors of the same dimension.
-
-        Parameters
-        ----------
-        other (Vector, compulsory)
-            The second vector.
-
-        Returns
-        -------
-        Vector
-            Dot product of the 2 vectors.
-
-        Raises
-        ------
-        ValueError: Raised if the dimension of vectors are not equal.
-        """
-
-        if len(self) == len(other):
-            dotproduct = 0
-            for elem1, elem2 in zip(self, other):
-                dotproduct += elem1 * elem2
-            return dotproduct
-        raise ValueError("The dimension of the 2 vectors must be the same.")
-
-
-    def cross_product(self, other):
-        """Returns the cross product of 2 vectors.
-
-        Parameters
-        ----------
-        other (Vector, compulsory)
-            The second vector.
-
-        Returns
-        -------
-        Vector
-            Cross product of the 2 vectors.
-
-        Raises
-        ------
-        ValueError: Raised if the dimension of vectors are not equal.
-        ValueError: Raised if the dimension of vectors is not equal to 2 or 3.
-        """
-
-        if self.__len__() == len(other):
-            if self.__len__() == 3:
-                a1, a2, a3 = self
-                b1, b2, b3 = other
-                return [a2*b3 - a3*b2, a3*b1 + a1*b3, a1*b2 - a2*b1]
-            elif self.__len__() == 2:
-                a1, a2 = self
-                b1, b2 = other
-                return [0, 0, a1*b2 - a2*b1]
-            raise ValueError("The dimension of the 2 vectors must be less than or equal to 3.")
-        raise ValueError("The dimension of the 2 vectors must be the same.")
-
+        return '<' + str(self.vector)[1: -1] + '>'
 
     def __add__(self, other):
         """Adds 2 vectors of the same dimension.
@@ -190,16 +44,15 @@ class Vector:
 
         Raises
         ------
-        ValueError: Raised if the dimension of vectors are not equal.
+        ValueError
+            Raised if the dimension of vectors are not equal.
         """
-
         if len(self) == len(other):
             ResultantVector = []
             for elem1, elem2 in zip(self, other):
-                ResultantVector = elem1 + elem2
-            return ResultantVector
+                ResultantVector.append(elem1 + elem2)
+            return Vector(ResultantVector)
         raise ValueError("The dimension of the 2 vectors must be the same.")
-
 
     def __sub__(self, other):
         """Subtracts 2 vectors of the same dimension.
@@ -216,16 +69,15 @@ class Vector:
 
         Raises
         ------
-        ValueError: Raised if the dimension of vectors are not equal.
+        ValueError
+            Raised if the dimension of vectors are not equal.
         """
-
         if len(self) == len(other):
             ResultantVector = []
             for elem1, elem2 in zip(self, other):
-                ResultantVector = elem1 - elem2
-            return ResultantVector
+                ResultantVector.append(elem1 - elem2)
+            return Vector(ResultantVector)
         raise ValueError("The dimension of the 2 vectors must be the same.")
-
 
     def __mul__(self, other):
         """Returns the cross product of 2 vectors.
@@ -242,12 +94,241 @@ class Vector:
 
         Raises
         ------
-        ValueError: Raised if the dimension of vectors are not equal.
-        ValueError: Raised if the dimension of vectors is not equal to 2 or 3.
+        ValueError
+            Raised if the dimension of vectors are not equal.
+        ValueError
+            Raised if the dimension of vectors is not equal to 2 or 3.
+        """
+        if self.__len__() == len(other):
+            if self.__len__() == 3:
+                a1, a2, a3 = self
+                b1, b2, b3 = other
+                return Vector([a2*b3 - a3*b2, a3*b1 + a1*b3, a1*b2 - a2*b1])
+            elif self.__len__() == 2:
+                a1, a2 = self
+                b1, b2 = other
+                return Vector([0, 0, a1*b2 - a2*b1])
+            raise ValueError("The dimension of the 2 vectors must be less than or equal to 3.")
+        raise ValueError("The dimension of the 2 vectors must be the same.")
 
+    def __truediv__(self, number):
+        """Divides the vector with the given number
+
+        Args
+        ----
+        number (int/float): The number to divide.
+
+        Returns:
+            [type]: [description]
+        """
+        if type(number) in [int, float]:
+            divided = [i/number for i in self]
+            return Vector(*divided)
+        else:
+            TypeError("Only integer and float is allowed.")
+
+    def __eq__(self, other):
+        """Tells whether the vectors are equal or not.
+
+        Parameters
+        ----------
+        other (Vector, compulsory)
+            The second vector.
+
+        Returns
+        -------
+        bool
+            True if vectors are equal, False otherwise.
+        """
+        for i, j in zip(self, other):
+            if i != j:
+                return False
+        return True
+
+    def x(self):
+        """Returns the first vector component."""
+        return self[0]
+
+    def y(self):
+        """Returns the second vector component."""
+        return self[1] if len(self) > 1 else 0
+
+    def z(self):
+        """Returns the third vector component."""
+        return self[2] if len(self) > 2 else 0
+
+    def w(self):
+        """Returns the fourth vector component."""
+        return self[3] if len(self) > 3 else 0
+
+    def modulus(self):
+        """Returns the modulus (length/magnitude) of the vector.
+
+        Returns
+        -------
+        float
+            magnitude of the length of the vector.
+        """
+        squared = 0
+        for i in self:
+            squared += i**2
+        return sqrt(squared)
+
+    def argument(self):
+        """Returns the argument of the vector.
+
+        Returns
+        -------
+        list
+            a list containing angle which the vector makes with respect to the axes.
+        """
+        norm = self.modulus()
+        return [asin(i / norm) for i in self]
+
+    def unitVector(self):
+        """Returns the unit vector of the given vector.
+
+        Returns
+        -------
+        Vector
+            A vector of magnitude equal to 1 in the same direction as the given vector.
+        """
+        mod = self.modulus()
+        UnitVector = []
+        if mod == 0:
+            return self
+        for element in self:
+            UnitVector.append(element / mod)
+        return Vector(UnitVector)
+
+    def magnify(self, magnification=1):
+        """Returns the scaled-up or scaled-down version of the vector.
+
+        Parameter
+        ---------
+        magnification (int/float, optional)
+            The scale of magnification of the vector. Defaults to 1.
+
+        Returns
+        -------
+        Vector
+            A vector (whose magnitude = magnitude of original vector * magnification) in the same direction as the given vector.
+        """
+        NewVector = []
+        for element in self.vector:
+            NewVector.append(element * magnification)
+        return Vector(NewVector)
+
+    def rotate(self, theta=0, radians=True):
+        """Rotates the given vector by the given angle in clockwise direction.
+
+        Parameters
+        ----------
+        theta (int/float, optional)
+            The angle of rotation (in radians). Defaults to 0.
+        radians (bool, optional)
+            Unit of theta. radians (True) or degrees (False). Defaults to True.
+
+        Raises 
+        ------
+        ValueError
+            Raised if the dimension of vector is not equal to 2.
+        """
+        if self.__len__() == 2:
+            x = self.vector[0]
+            y = self.vector[1]
+            if not radians:
+                theta = theta * 180 / pi
+            new_x = x * cos(theta) - y * sin(theta)
+            new_y = x * sin(theta) + y * cos(theta)
+            return Vector(new_x, new_y)
+        raise ValueError("The dimension of the vector must be 2.")
+
+    def dot_product(self, other):
+        """Multiplies 2 vectors of the same dimension.
+
+        Parameters
+        ----------
+        other (Vector, compulsory)
+            The second vector.
+
+        Returns
+        -------
+        Vector
+            Dot product of the 2 vectors.
+
+        Raises
+        ------
+        ValueError
+            Raised if the dimension of vectors are not equal.
+        """
+        if len(self) == len(other):
+            dotproduct = 0
+            for elem1, elem2 in zip(self, other):
+                dotproduct += elem1 * elem2
+            return dotproduct
+        raise ValueError("The dimension of the 2 vectors must be the same.")
+
+    def cross_product(self, other):
+        """Returns the cross product of 2 vectors.
+
+        Parameters
+        ----------
+        other (Vector, compulsory)
+            The second vector.
+
+        Returns
+        -------
+        Vector
+            Cross product of the 2 vectors.
+
+        Raises
+        ------
+        ValueError
+            Raised if the dimension of vectors are not equal.
+        ValueError
+            Raised if the dimension of vectors is not equal to 2 or 3.
+        
         Alias
         -----
-        cross_product()
+            self.__mul__()
         """
+        return self.__mul__(other)
+    
+    def is_unit(self):
+        """Tells whether the vector is a unit or not.
 
-        return self.cross_product(other)
+        Returns
+        -------
+        bool
+            True if the vector is a unit vector, False otherwise.
+        """
+        length = 0
+        count_1 = 0
+        count_0 = 0
+        for i in self:
+            length += 1
+            if i == 0:
+                count_0 +=1
+            if i == 1:
+                count_1 +=1
+        return (count_1 == 1 and count_0 == (length - 1))
+    
+    def is_parellel(self, other):
+        """Tells whether the vectors are parellel or not.
+
+        Parameter
+        ---------
+        other (Vector, compulsory)
+            The second vector.
+
+        Returns
+        -------
+        bool
+            True if the vectors are parellel, False otherwise.
+        """
+        ratio = self[0] / other[0]
+        for i, j in zip(self, other):
+            if i / j != ratio:
+                return False
+        return True
