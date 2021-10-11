@@ -2,17 +2,41 @@
 ##                               Basic Matrices                               ##
 ################################################################################
 
-# Returns a null matrix of order N x M. If only 1 parameter is given, returns a null matrix of order N x N.
 def null(n, m=None):
-    if m == None: m = n
-    null_matrix = [[0]*m for _ in range(n)]
-    return null_matrix
+    """Creates a null matrix.
 
-# Returns an identity matrix of order N x N multiplied by the multiplication factor. Default value of mul_factor(multiplication factor) is 1.
-def identity(n, mul_factor=1):
+    Args:
+    n (int)
+        Number of rows of the matrix
+    m (int, optional): 
+        Number of columns of the matrix. Defaults to the number of rows.
+
+    Returns
+    -------
+    Matrix
+        A null matrix of order N x M.
+    """
+    if m == None:
+        m = n
+    return [[0] * m] * n
+
+def identity(n, mul=1):
+    """Creates an identity matrix.
+
+    Args:
+    n (int)
+        Number of rows of the matrix
+    mul (int/float, optional)
+        The multiplication factor. Defaults to 1.
+
+    Returns
+    -------
+    Matrix
+        An identity matrix multiplied by the multiplication factor.
+    """
     identity_matrix = null(n)
     for i in range(n):
-        identity_matrix[i][i] = mul_factor
+        identity_matrix[i][i] = mul
     return identity_matrix
 
 
@@ -20,8 +44,19 @@ def identity(n, mul_factor=1):
 ##                             Types  of  Matrices                            ##
 ################################################################################
 
-# Returns True if matrix is a valid matrix else returns False.
 def is_matrix(A):
+    """Tells whether an input is actually a matrix or not.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+
+    Returns
+    -------
+    bool
+        True if the input is a matrix, False otherwise.
+    """
     for row in A:
         if len(row) != len(A[0]):
             return False
@@ -30,18 +65,51 @@ def is_matrix(A):
                 return False
     return True
 
-# Returns True if the matrix is a null matrix else returns False.
 def is_null(A):
+    """Tells whether a matrix is a null matrix or not.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+
+    Returns
+    -------
+    bool
+        True if the matrix is a null matrix, False otherwise.
+    """
     return [[0] * len(A[0])] * len(A) == A
 
-# Returns True if the matrix is an identity matrix else returns False.
 def is_identity(A):
+    """Tells whether a matrix is an identity matrix or not.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+
+    Returns
+    -------
+    bool
+        True if the matrix is an identity matrix, False otherwise.
+    """
     return A == identity(len(A))
 
-# Returns True if matrix is a symmetric matrix else returns False.
 def is_symmetric(A):
+    """Tells whether a matrix is a symmetric matrix or not.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+
+    Returns
+    -------
+    bool
+        True if the matrix is a diagonal matrix, False otherwise.
+    """
     for i in range(len(A)):
-        for j in range(len(A)):
+        for j in range(len(A[0])):
             try:
                 if A[i][j] != A[j][i]:
                     return False
@@ -49,10 +117,21 @@ def is_symmetric(A):
                 return False
     return True
 
-# Returns True if matrix is a skew symmetric matrix else returns False.
 def is_skew_symmetric(A):
+    """Tells whether a matrix is a skew triangular matrix or not.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+
+    Returns
+    -------
+    bool
+        True if the matrix is a skew symmetric matrix, False otherwise.
+    """
     for i in range(len(A)):
-        for j in range(len(A)):
+        for j in range(len(A[0])):
             try:
                 if A[i][j] != -1 * A[j][i]:
                     return False
@@ -60,10 +139,21 @@ def is_skew_symmetric(A):
                 return False
     return True
 
-# Returns True if matrix is a diagonal matrix else returns False.
 def is_diagonal(A):
+    """Tells whether a matrix is a diagonal matrix or not.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+
+    Returns
+    -------
+    bool
+        True if the matrix is a diagonal matrix, False otherwise.
+    """
     for i in range(len(A)):
-        for j in range(len(A)):
+        for j in range(len(A[0])):
             try:
                 if i != j and A[i][j] != 0:
                     return False
@@ -71,16 +161,38 @@ def is_diagonal(A):
                 return False
     return True
 
-# Returns True if matrix is a square matrix else returns False.
 def is_square(A):
+    """Tells whether a matrix is a square matrix or not.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+
+    Returns
+    -------
+    bool
+        True if the matrix is a square matrix, False otherwise.
+    """
     if is_matrix(A):
         return len(A[0]) == len(A)
-    raise ValueError("The given matrix is not a square matrix.")
+    raise ValueError("The given matrix is not a matrix.")
 
-# Returns True if matrix is an upper triangular matrix else returns False.
 def is_utriangular(A):
+    """Tells whether a matrix is an upper triangular matrix or not.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+
+    Returns
+    -------
+    bool
+        True if the matrix is an upper triangular matrix, False otherwise.
+    """
     for i in range(len(A)):
-        for j in range(len(A)):
+        for j in range(len(A[0])):
             try:
                 if A[i][j] != 0 and i > j:
                     return False
@@ -88,10 +200,21 @@ def is_utriangular(A):
                 return False
     return True
 
-# Returns True if matrix is an lower triangular matrix else returns False.
 def is_ltriangular(A):
+    """Tells whether a matrix is an lower triangular matrix or not.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+
+    Returns
+    -------
+    bool
+        True if the matrix is an lower triangular matrix, False otherwise.
+    """
     for i in range(len(A)):
-        for j in range(len(A)):
+        for j in range(len(A[0])):
             try:
                 if A[i][j] != 0 and i < j:
                     return False
@@ -104,25 +227,83 @@ def is_ltriangular(A):
 ##                           Matrix   Compatibility                           ##
 ################################################################################
 
-# Returns True if matrices are compatible for addition/subtraction else returns False.
 def compatAS(a, b):
+    """Tells if the 2 matrices can be added/subtracted.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+    B (compulsory):
+        Another matrix.
+
+    Raises
+    ------
+    ValueError
+        Raised if the given input is not a matrix.
+
+    Returns
+    -------
+    bool
+        True if the given matrix can be added/subtracted, False otherwise.
+    """
     if is_matrix(a) and is_matrix(b):
         return False if len(a) != len(b) or len(a[0]) != len(b[0]) else True
     raise ValueError("The given parameter is not a matrix.")
 
-# Returns True if matrices are compatible for multiplication else returns False.
 def compatM(A, B):
-    if is_matrix(A) and is_matrix(B):
-        return True if len(A[0]) == len(B) else False
-    raise ValueError("The given parameter is not a matrix.")
+    """Tells if the 2 matrices can be multiplied.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+    B (compulsory):
+        Another matrix.
+
+    Raises
+    ------
+    ValueError
+        Raised if the given input is not a matrix.
+
+    Returns
+    -------
+    bool
+        True if the given matrix can be multiplied, False otherwise.
+    """
+    if is_matrix(A):
+        if is_matrix(B):
+            return True if len(A[0]) == len(B) else False
+        raise ValueError(f"{B} is not a matrix.")
+    raise ValueError(f"{A} is not a matrix.")
 
 
 ################################################################################
 ##                           Arithmetic  Operations                           ##
 ################################################################################
 
-# Returns the sum matrix (A+B), provided the matrices are compatible.
 def matAdd(a, b):
+    """Returns the sum matrix (A+B), if mathematically possible.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+    B (compulsory):
+        Another matrix.
+
+    Raises
+    ------
+    ValueError
+        Raised when the addition of the two matrices is not possible.
+    ValueError
+        Raised if the given input is not a matrix.
+
+    Returns
+    -------
+    Matrix
+        The matrix representing the sum of the two matrices.
+    """
     if compatAS(a, b):
         matrix = []
         for i in range(len(a)):
@@ -132,8 +313,28 @@ def matAdd(a, b):
         return matrix
     raise ValueError("The 2 matrices do not have the same order.")
 
-# Returns the difference matrix (A-B), provided the matrices are compatible.
 def matSub(a, b):
+    """Returns the difference matrix (A-B), if mathematically possible.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+    B (compulsory):
+        Another matrix.
+
+    Raises
+    ------
+    ValueError
+        Raised when the subtraction of the two matrices is not possible.
+    ValueError
+        Raised if the given input is not a matrix.
+
+    Returns
+    -------
+    Matrix
+        The matrix representing the difference of the two matrices.
+    """
     if compatAS(a, b):
         matrix = []
         for i in range(len(a)):
@@ -143,8 +344,28 @@ def matSub(a, b):
         return matrix
     raise ValueError("The 2 matrices do not have the same order.")
 
-# Returns the product matrix (AB), provided the matrices are compatible.
 def matMul(a, b):
+    """Returns the product matrix (AB), if mathematically possible.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+    B (compulsory):
+        Another matrix.
+
+    Raises
+    ------
+    ValueError
+        Raised when the multiplication of the two matrices is not possible.
+    ValueError
+        Raised if the given input is not a matrix.
+
+    Returns
+    -------
+    Matrix
+        The matrix representing the product of the two matrices.
+    """
     if compatM(a, b):
         matrix = []
         for i in range( len(a) ):
@@ -157,20 +378,53 @@ def matMul(a, b):
         return matrix
     raise ValueError("The 2 matrices are not compatible for multiplication.")
 
-# Returns the matrix representing the n^th power of matrix A, provided the matrix is square matrix.
-def power(a, n):
+def power(a, power=2):
+    """Returns the matrix representing the n^th power of matrix A, if mathematically possible.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+    power (optional, int)
+        The power of the matrix. defaults to 2.
+
+    Raises
+    ------
+    ValueError
+        Raised if the matrix is not a square matrix.
+    ValueError
+        Raised if the given input is not a matrix.
+
+    Returns
+    -------
+    Matrix
+        The matrix represting the n^th power of the matrix A.
+    """
     if is_square(a):
         matrix = a
-        for _ in range(n-1):
+        for _ in range(power-1):
             matrix = matMul(a, matrix)
         return matrix
     raise ValueError("The given matrix is not a square matrix.")
-    
-# Returns the scalar product of A and n (nA).
-def scalarMul(a, n=1):
+
+def scalarMul(a, mul=1):
+    """Returns the scalar product of A and n (nA)
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+    mul (int/float, optional)
+        The multiplication factor. Defaults to 1.
+
+    Returns
+    -------
+    Matrix
+        The matrix multiplied with the multiplication factor
+    """
     for i in range(len(a)):
         for j in range(len(a[i])):
-            a[j][i] *= n
+            a[j][i] *= mul
     return a
 
 
@@ -178,8 +432,23 @@ def scalarMul(a, n=1):
 ##                             Matrix   Operations                            ##
 ################################################################################
 
-# Returns a smaller matrix by removing the required row and column. The default of row and column is 0.
 def cut(A, row=0, column=0):
+    """Returns a smaller matrix by removing the required row and column.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+    row (int, optional)
+        The row to be removed. Defaults to 0.
+    column (int, optional)
+        The column to be removed. Defaults to 0.
+
+    Returns
+    -------
+    Matrix
+        The matrix with the required rows and columns removed.
+    """
     matrix = []
     for i in range(len(A)):
         if i != row:
@@ -187,8 +456,21 @@ def cut(A, row=0, column=0):
             matrix.append(x)
     return matrix
 
-# Returns a matrix which is formed by rotating the given matrix, n times, in clockwise sense.
 def rotate(A, turns=1):
+    """A matrix which is formed by rotating the given matrix, n times, in clockwise sense.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+    turns (int, optional)
+        The number of turns to rotate the matrix. Defaults to 1.
+
+    Returns
+    -------
+    Matrix
+        The matrix obtained on rotating the given matrix.
+    """
     turns = turns % 4
     if turns == 0:
         return A
@@ -199,8 +481,21 @@ def rotate(A, turns=1):
         Rotated_A = [[A[j][i] for j in range(len(A[i]))][::-1] for i in range(len(A))]
         return rotate(Rotated_A, turns-1)
 
-# Returns the transpose of the matrix.
 def transpose(A, mul_factor=1):
+    """The transpose of the matrix.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+    mul_factor (int/float, optional)
+        Multiplication factor of the matrix. Defaults to 1.
+
+    Returns
+    -------
+    Matrix
+        The transpose of the given matrix multiplied by the multiplication factor.
+    """
     matrix = []
     for i in range(len(A[0])):
         matrix.append([])
@@ -208,8 +503,26 @@ def transpose(A, mul_factor=1):
             matrix[i].append(A[j][i] * mul_factor)
     return matrix
 
-# Returns the adjoint of the matrix multiplied by the multiplication factor. Default value of mul_factor(multiplication factor) is 1.
 def adj(A, mul_factor=1):
+    """The adjoint of the matrix.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+    mul_factor (int/float, optional)
+        Multiplication factor of the matrix. Defaults to 1.
+
+    Raises
+    ------
+    ValueError
+        Raised when the matrix is not a square matrix.
+
+    Returns
+    -------
+    Matrix
+        The adjoint of the given matrix multiplied by the multiplication factor.
+    """
     if is_square(A):
         matrix = []
         for i in range(len(A)):
@@ -219,8 +532,26 @@ def adj(A, mul_factor=1):
         return transpose(matrix, mul_factor)
     raise ValueError("The given matrix is not a square matrix.")
 
-# Returns the inverse of the matrix (if and only if the matrices are compatible) multiplied by the multiplication factor. Default value of mul_factor (multiplication factor) is 1.
 def inv(A, mul_factor=1):
+    """The inverse of the matrix (if and only if the matrices are compatible). 
+    
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+    mul_factor (int/float, optional)
+        Multiplication factor of the matrix. Defaults to 1.
+
+    Raises
+    ------
+    ValueError
+        Raised when the matrix is not a square matrix.
+
+    Returns
+    -------
+    Matrix
+        The inverse of the given matrix multiplied by the multiplication factor.
+    """
     if is_square(A):
         matrix = []
         for i in range(len(A)):
@@ -233,32 +564,76 @@ def inv(A, mul_factor=1):
 ################################################################################
 ##                            Matrix   Properties                             ##
 ################################################################################
+ 
+def det(A):
+    """Returns the determinant of the matrix (if mathematically possible).
 
-# Returns the determinant of the matrix (if and only if the matrices are compatible for multiplication) multiplied by the multiplication factor. Default value of mul_factor (multiplication factor) is 1.
-def det(a, mul_factor=1):
-    length = len(a)
-    if is_square(a):
-        det = mul_factor
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+
+    Raises
+    ------
+    ValueError
+        Raised when the matrix is not a square matrix.
+
+    Returns
+    -------
+    int/float
+        The determinant of the given matrix.
+    """
+    length = len(A)
+    if is_square(A):
+        det = 1
         for i in range(length):
             for j in range(i+1, length):
-                if a[i][i] == 0:
-                    a[i][i] = 1
-                x = a[j][i] / a[i][i]
+                if A[i][i] == 0:
+                    A[i][i] = 1
+                x = A[j][i] / A[i][i]
                 for k in range(length):
-                    a[j][k] -= x * a[i][k]
+                    A[j][k] -= x * A[i][k]
         for i in range(length):
-            det *= a[i][i]
+            det *= A[i][i]
         return det
     raise ValueError("The given matrix is not a square matrix.")
 
-# Returns the trace of the matrix (i.e the product of elements on the diagonal) if possible.
 def trace(A):
+    """Returns the trace of the matrix (i.e the product of elements on the diagonal), if mathematically possible.
+
+    Args
+    ----
+    A (Compulsory)
+        A matrix.
+
+    Raises
+    ------
+    ValueError
+        Raised when the matrix is not a square matrix.
+
+    Returns
+    -------
+    int/float
+        The trace of the given matrix.
+    """
     if is_square(A):
         Trace = 1
-        for i in range(len(A)): Trace *= A[i][i]
+        for i in range(len(A)):
+            Trace *= A[i][i]
         return Trace
     raise ValueError("The given matrix is not a square matrix.")
 
-# Returns the order of the matrix as a tuple (rows, columns).
 def order(A):
-    return tuple([len(A), len(A[0])])
+    """Returns the order of the matrix.
+
+    Args
+    ----
+    A (compulsory)
+        A matrix.
+
+    Returns
+    -------
+    tuple
+        the order of the given matrix in the form (rows, columns).
+    """
+    return (len(A), len(A[0]))
