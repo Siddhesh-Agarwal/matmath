@@ -1,92 +1,80 @@
 # [matmath module](https://github.com/Siddhesh-Agarwal/matmath)
 
 A simple and efficient module for matrix manipulation.
-
 ___________________________________________________________________________
 
 ## Installing under Python
 
 When installing the **matmath module** for python, it is recommended that you check if you have **python 3.6 or above**.
-To install the library:
+To install matmath, goto a terminal and run:
 
-    pip install matmath
-
+    pip3 install matmath
 ___________________________________________________________________________
-<!--
-## General usage notes
-
-Test message
-
-* This module is meant for matrix manipulation and can carry out various operations. The **matmath mmodule** can carry various mathematical operations like addition, subtraction, multiplication and exponentiation along with Matrix-defined function like inverse, rotation, transpose, etc.
-* It can also be used in finding determinant, inverse, transpose and adjoin of a matrix.
-* The matrix/matrices should contain **only numbers** (i.e. `<class 'int'>`, `<class 'float'>` or `<class 'complex'>`) and not letters (i.e `<class 'str'>`) in order to avoid error.
-* a few functions (example - `matAdd()`, `matSub()`, `matMul()`, `adj()`, `det()` and `inverse()`) may throw an error due to incompatibility of the matrices with the function.
-
-___________________________________________________________________________
--->
 
 ## Functions and their uses
 
 ### Matrix related functions
 
-| Functions         | Description                                                                                                                                                                            |
-|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `adj`             | Returns the adjoint of the matrix multiplied by the multiplication factor. Default value of mul(multiplication factor) is 1.                                                           |
-| `compatAS`        | Returns True if matrices are compatible for addition/subtraction else returns False.                                                                                                   |
-| `compatM`         | Returns True if matrices are compatible for multiplication else returns False.                                                                                                         |
-| `cut`             | Returns a smaller matrix by removing the required row and column. The default of row and column is 0.                                                                                  |
-| `det`             | Returns the determinant of the matrix (iff the matrices are compatible for multiplication) multiplied by the multiplication factor. Default value of mul (multiplication factor) is 1. |
-| `Identity`        | Returns an identity matrix of order N x N multiplied by the multiplication factor. Default value of mul (multiplication factor) is 1.                                                  |
-| `inv`             | Returns the inverse of the matrix (iff the matrices are compatible) multiplied by the multiplication factor. Default value of mul (multiplication factor) is 1.                        |
-| `isDiagonal`      | Returns True if matrix is a diagonal matrix else returns False.                                                                                                                        |
-| `isIdentity`      | Returns True if matrix is an identity matrix else returns False.                                                                                                                       |
-| `isLTriangular`   | Returns True if matrix is a lower triangular matrix else returns False.                                                                                                                |
-| `isMatrix`        | Returns True if matrix is a valid matrix else returns False.                                                                                                                           |
-| `isNull`          | Returns True if matrix is a null matrix else returns False.                                                                                                                            |
-| `isSkewSymmetric` | Returns True if matrix is a skew symmetric matrix else returns False.                                                                                                                  |
-| `isSquare`        | Returns True if matrix is a square matrix else returns False.                                                                                                                          |
-| `isSymmetric`     | Returns True if matrix is a symmetric matrix else returns False.                                                                                                                       |
-| `isUTriangular`   | Returns True if matrix is an upper triangular matrix else returns False.                                                                                                               |
-| `matAdd`          | Returns the sum matrix (i.e. A + B), provided the matrices are compatible.                                                                                                             |
-| `matMul`          | Returns the product matrix (i.e. AB), provided the matrices are compatible.                                                                                                            |
-| `matSub`          | Returns the difference matrix (i.e. A - B), provided the matrices are compatible.                                                                                                      |
-| `Null`            | Returns a null matrix of order N x M. If only 1 parameter is given returns a null matrix of order N x N.                                                                               |
-| `order`           | Returns the order of the matrix as a tuple of the form (rows, columns).                                                                                                                |
-| `power`           | Returns the matrix representing the n<sup>th</sup> power of matrix A, provided the matrix is square matrix.                                                                            |
-| `rotate`          | Returns a matrix which is formed by rotating the given matrix, n times, in clockwise sense.                                                                                            |
-| `scalarMul`       | Returns the scalar product of A and n (i.e. nA).                                                                                                                                       |
-| `trace`           | Returns the trace of the matrix (i.e the product of elements on the diagonal) if possible.                                                                                             |
-| `transpose`       | Returns the transpose of the matrix.                                                                                                                                                   |
+| Functions         | Description                                                                                                |
+| ----------------- | ---------------------------------------------------------------------------------------------------------- |
+| `adj`             | Returns the adjoint of the matrix multiplied by the multiplication factor.                                 |
+| `compatAS`        | Tells if the addition/subtractition of the matrices is mathematically possible.                            |
+| `compatM`         | Tells if the multiplication of the matrices is mathematically possible.                                    |
+| `cut`             | Returns a smaller matrix by removing the required row and column. The default of row and column is 0.      |
+| `det`             | Returns the determinant of the matrix (if mathematically possible).                                        |
+| `Identity`        | Returns an identity matrix of order N x N multiplied by the multiplication factor.                         |
+| `inv`             | Returns the inverse of the matrix (if mathematically possible) multiplied by the multiplication factor.    |
+| `isDiagonal`      | Tells if input is a diagonal matrix.                                                                       |
+| `isIdentity`      | Tells if input is an identity matrix.                                                                      |
+| `isLTriangular`   | Tells if input is a lower triangular matrix.                                                               |
+| `isMatrix`        | Tells if input is actually a matrix.                                                                       |
+| `isNull`          | Tells if input is a null matrix.                                                                           |
+| `isSkewSymmetric` | Tells if input is a skew symmetric matrix.                                                                 |
+| `isSquare`        | Tells if input is a square matrix.                                                                         |
+| `isSymmetric`     | Tells if input is a symmetric matrix.                                                                      |
+| `isUTriangular`   | Tells if input is an upper triangular matrix.                                                              |
+| `matAdd`          | Returns the sum matrix (i.e. A + B), if mathematically possible.                                           |
+| `matMul`          | Returns the product matrix (i.e. AB), if mathematically possible.                                          |
+| `matSub`          | Returns the difference matrix (i.e. A - B), if mathematically possible.                                    |
+| `Null`            | Returns a null matrix of order N x M. If only 1 parameter is given returns a null matrix of order N x N.   |
+| `order`           | Returns the order of the matrix as a tuple of the form (rows, columns).                                    |
+| `power`           | Returns the n<sup>th</sup> power of matrix A, if mathematically possible.                                  |
+| `rotate`          | Returns a matrix which is formed by rotating the given matrix, n times, in clockwise sense.                |
+| `scalarMul`       | Returns the scalar product of A and n (i.e. nA).                                                           |
+| `trace`           | Returns the trace of the matrix (i.e the product of elements on the diagonal), if mathematically possible. |
+| `transpose`       | Returns the transpose of the matrix.                                                                       |
+
+**NOTE**: Default value of mul (multiplication factor) is always 1.
 
 ### Vector related functions
 
-| Functions     | Description                                                 |
-| ------------- | ----------------------------------------------------------- |
-| `modulus`       | Returns the modulus of the vector.                          |
-| `argument`      | Returns the argument of the vector.                         |
-| `unitVector`    | Returns the unit vector in the direction of the vector.     |
-| `magnify`       | Returns a magnified vector.                                 |
-| `rotate`        | Rotates the 2d vector in 2D space.                          |
-| `dot_product`   | Dot product of the vector with respect to another vector.   |
-| `cross_product` | Cross product of the vector with respect to another vector. |
+| Functions       | Description                                                 |
+| --------------- | ----------------------------------------------------------- |
 | `__add__`       | Adds the 2 vectors                                          |
-| `__sub__`       | Subtracts the second vector from the first vector.          |
+| `__eq__`        | Tells whether the 2 vectors are equal or not.               |
+| `getitem__`     | Returns the vector at the given index.                      |
+| `__len__`       | Returns the length of the vector.                           |
 | `__mul__`       | Alias of `cross_product()`.                                 |
-
-___________________________________________________________________________
-
-## Upcoming
-
-**Increased speed** of Matrix operations by using **2D Numpy Array** instead of list of lists.
-
+| `__setitem__`   | changes the value of the vector using the key.              |
+| `__sub__`       | Subtracts the second vector from the first vector.          |
+| `argument`      | Returns the argument of the vector.                         |
+| `cross_product` | Cross product of the vector with respect to another vector. |
+| `dot_product`   | Dot product of the vector with respect to another vector.   |
+| `is_parellel`   | Tells whether the two vectors are parellel or not.          |
+| `is_unit`       | Tells whether the vector is a unit vector or not.           |
+| `magnify`       | Magnifies a vector.                                         |
+| `modulus`       | Returns the modulus of the vector.                          |
+| `rotate`        | Rotates the 2d vector in 2D space.                          |
+| `unitVector`    | Returns the unit vector in the direction of the vector.     |
+S
 ___________________________________________________________________________
 
 ## Contact
 
-Please Feel Free to Reach Out if You Have Any Questions:
+Please feel free to reach out if you have any questions:
 
-* Name: Siddhesh Agarwal
-* E-mail: Siddhesh.agarwal@gmail.com
+* **Name**: Siddhesh Agarwal
+* **E-mail**: siddhesh.agarwal@gmail.com
 
 ___________________________________________________________________________
 
