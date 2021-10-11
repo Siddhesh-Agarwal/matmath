@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "matmath",
-    version = "v1.1.1",
+    version = "v2.1.0",
     author = "Siddhesh Agarwal",
     author_email = "siddhesh.agarwal@gmail.com",
     description = "A simple and efficient module for matrix manipulation.",
