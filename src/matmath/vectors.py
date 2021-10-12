@@ -1,12 +1,19 @@
-from math import pi, cos, sin, asin, sqrt
+from math import pi, cos, sin, acos, sqrt
 
 class Vector:
     def __init__(self, *args):
         """Creates a vector out of the given args."""
-        if len(args) > 1:
-            self.vector = list(args)
+        if len(args) == 0:
+            self.vector = [0, 0]
+        elif len(args) == 1:
+            if args[0] % 1 == 0 and args[0] > 0:
+                self.vector = [0] * int(args[0])
+            else:
+                raise ValueError(f"The Vector cannot have {args[0]} dimensions. Number of dimensions must be a positive integer.")
         elif len(args) == 1 and type(args[0]) not in [int, float]:
             self.vector = list(args[0])
+        elif len(args) > 1:
+            self.vector = list(args)
         else:
             raise ValueError("Vector takes atleast 2 arguements only 1 given.")
 
@@ -118,12 +125,14 @@ class Vector:
         ----
         number (int/float): The number to divide.
 
-        Returns:
-            [type]: [description]
+        Returns
+        -------
+        Vector
+            The vector divided with the given number.
         """
         if type(number) in [int, float]:
             divided = [i/number for i in self]
-            return Vector(*divided)
+            return Vector(divided)
         else:
             TypeError("Only integer and float is allowed.")
 
@@ -183,9 +192,9 @@ class Vector:
             a list containing angle which the vector makes with respect to the axes.
         """
         norm = self.modulus()
-        return [asin(i / norm) for i in self]
+        return [acos(i / norm) for i in self]
 
-    def unitVector(self):
+    def unit_vector(self):
         """Returns the unit vector of the given vector.
 
         Returns
@@ -219,15 +228,15 @@ class Vector:
             NewVector.append(element * magnification)
         return Vector(NewVector)
 
-    def rotate(self, theta=0, radians=True):
+    def rotate(self, theta=pi, radians=True):
         """Rotates the given vector by the given angle in clockwise direction.
 
         Parameters
         ----------
         theta (int/float, optional)
-            The angle of rotation (in radians). Defaults to 0.
+            The angle of rotation (in radians). Defaults to pi.
         radians (bool, optional)
-            Unit of theta. radians (True) or degrees (False). Defaults to True.
+            Unit of theta. radians (True) or degrees (False). Defaults to radians (True).
 
         Raises 
         ------
@@ -238,14 +247,14 @@ class Vector:
             x = self.vector[0]
             y = self.vector[1]
             if not radians:
-                theta = theta * 180 / pi
+                theta = theta * pi / 180
             new_x = x * cos(theta) - y * sin(theta)
             new_y = x * sin(theta) + y * cos(theta)
             return Vector(new_x, new_y)
         raise ValueError("The dimension of the vector must be 2.")
 
     def dot_product(self, other):
-        """Multiplies 2 vectors of the same dimension.
+        """The dot product of two vectors, if possible.
 
         Parameters
         ----------
@@ -270,7 +279,7 @@ class Vector:
         raise ValueError("The dimension of the 2 vectors must be the same.")
 
     def cross_product(self, other):
-        """Returns the cross product of 2 vectors.
+        """The cross product of two vectors, if possible.
 
         Parameters
         ----------
