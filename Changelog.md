@@ -1,4 +1,5 @@
 # Changelog
+
 _______________________________
 
 ## 16 June 2021 - v1.0.0
@@ -34,3 +35,10 @@ _______________________________
 - Improvised `__repr__` method. A vector now looks like this `<1, 0, 0>` instead of `[1, 0, 0]`.
 - Added `is_unit` and `is_parellel` methods.
 - Improved comments in `matmath.py` which can be accessed by using `help()` method.
+
+## 12 October 2021 - v2.1.1
+
+- Corrected `arguement()` in `Vector` class.
+- Changed `unitVector()` to `unit_vector()` in `Vector` class.
+- Now call `Vector(n)` to generate a n-dimensional zero vector. n defaults to 2.
+- Corrected problem in `rotate()` in `Vector` class.
