@@ -66,7 +66,6 @@ ___________________________________________________________________________
 | `modulus`       | Returns the modulus of the vector.                          |
 | `rotate`        | Rotates the 2d vector in 2D space.                          |
 | `unitVector`    | Returns the unit vector in the direction of the vector.     |
-S
 ___________________________________________________________________________
 
 ## Contact
