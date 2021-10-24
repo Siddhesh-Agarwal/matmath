@@ -50,13 +50,9 @@ ___________________________________________________________________________
 
 | Functions       | Description                                                 |
 | --------------- | ----------------------------------------------------------- |
-| `__add__`       | Adds the 2 vectors                                          |
-| `__eq__`        | Tells whether the 2 vectors are equal or not.               |
-| `getitem__`     | Returns the vector at the given index.                      |
+| `__getitem__`   | Returns the vector at the given index.                      |
 | `__len__`       | Returns the length of the vector.                           |
-| `__mul__`       | Alias of `cross_product()`.                                 |
 | `__setitem__`   | changes the value of the vector using the key.              |
-| `__sub__`       | Subtracts the second vector from the first vector.          |
 | `argument`      | Returns the argument of the vector.                         |
 | `cross_product` | Cross product of the vector with respect to another vector. |
 | `dot_product`   | Dot product of the vector with respect to another vector.   |
@@ -72,8 +68,8 @@ ___________________________________________________________________________
 
 Please feel free to reach out if you have any questions:
 
-* **Name**: Siddhesh Agarwal
-* **E-mail**: siddhesh.agarwal@gmail.com
+- **Name**: Siddhesh Agarwal
+- **E-mail**: siddhesh.agarwal@gmail.com
 
 ___________________________________________________________________________
 
