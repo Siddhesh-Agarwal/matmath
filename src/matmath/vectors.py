@@ -6,16 +6,15 @@ class Vector:
         if len(args) == 0:
             self.vector = [0, 0]
         elif len(args) == 1:
-            if args[0] % 1 == 0 and args[0] > 0:
-                self.vector = [0] * int(args[0])
+            if type(args[0]) in (int, float):
+                raise ValueError("Vector takes atleast 2 arguements only 1 given.")
             else:
-                raise ValueError(f"The Vector cannot have {args[0]} dimensions. Number of dimensions must be a positive integer.")
-        elif len(args) == 1 and type(args[0]) not in [int, float]:
-            self.vector = list(args[0])
-        elif len(args) > 1:
-            self.vector = list(args)
+                self.vector = list(args[0])
         else:
-            raise ValueError("Vector takes atleast 2 arguements only 1 given.")
+            for i in args:
+                if type(i) not in (int, float):
+                    raise ValueError(f"class Vector takes only int and float not {type(i)}")
+            self.vector = list(args)
 
     def __iter__(self):
         return self.vector.__iter__()
@@ -87,36 +86,58 @@ class Vector:
         raise ValueError("The dimension of the 2 vectors must be the same.")
 
     def __mul__(self, other):
-        """Returns the cross product of 2 vectors.
+        """Returns the product of vector and a number.
 
         Parameters
         ----------
-        other (Vector, compulsory)
+        other (int/float/Vector, compulsory)
             The second vector.
 
         Returns
         -------
         Vector
-            Cross product of the 2 vectors.
+            product of the two.
 
         Raises
         ------
         ValueError
-            Raised if the dimension of vectors are not equal.
-        ValueError
-            Raised if the dimension of vectors is not equal to 2 or 3.
+            Raised if the given element is not a number or a vector.
         """
-        if self.__len__() == len(other):
-            if self.__len__() == 3:
-                a1, a2, a3 = self
-                b1, b2, b3 = other
-                return Vector([a2*b3 - a3*b2, a3*b1 + a1*b3, a1*b2 - a2*b1])
-            elif self.__len__() == 2:
-                a1, a2 = self
-                b1, b2 = other
-                return Vector([0, 0, a1*b2 - a2*b1])
-            raise ValueError("The dimension of the 2 vectors must be less than or equal to 3.")
-        raise ValueError("The dimension of the 2 vectors must be the same.")
+        if type(other) in (int, float):
+            new = []
+            for i in range(len(self)):
+                new.append(self[i] * other)
+            return Vector(new)
+        elif type(other) is Vector:
+            return self.cross_product(other)
+        ValueError(f"Multiplication is not supported only for vectors and numbers not {type(other)}")
+
+    def __rmul__(self, other):
+        """Returns the product of vector and a number.
+
+        Parameters
+        ----------
+        other (int/float/Vector, compulsory)
+            The second vector.
+
+        Returns
+        -------
+        Vector
+            product of the two.
+
+        Raises
+        ------
+        ValueError
+            Raised if the given element is not a number or a vector.
+        """
+        if type(other) in (int, float):
+            new = []
+            for i in range(len(self)):
+                new.append(self[i] * other)
+            return Vector(new)
+        elif type(other) is Vector:
+            return other.cross_product(self)
+        ValueError(f"Multiplication is not supported only for vectors and numbers not {type(other)}")
 
     def __truediv__(self, number):
         """Divides the vector with the given number
@@ -238,6 +259,11 @@ class Vector:
         radians (bool, optional)
             Unit of theta. radians (True) or degrees (False). Defaults to radians (True).
 
+        Returns
+        -------
+        Vector
+            The vector rotated through the given angle in clockwise direction.
+
         Raises 
         ------
         ValueError
@@ -279,7 +305,7 @@ class Vector:
         raise ValueError("The dimension of the 2 vectors must be the same.")
 
     def cross_product(self, other):
-        """The cross product of two vectors, if possible.
+        """Returns the cross product of 2 vectors.
 
         Parameters
         ----------
@@ -297,12 +323,18 @@ class Vector:
             Raised if the dimension of vectors are not equal.
         ValueError
             Raised if the dimension of vectors is not equal to 2 or 3.
-        
-        Alias
-        -----
-            self.__mul__()
         """
-        return self.__mul__(other)
+        if self.__len__() == len(other):
+            if self.__len__() == 3:
+                a1, a2, a3 = self
+                b1, b2, b3 = other
+                return Vector([a2*b3 - a3*b2, a3*b1 + a1*b3, a1*b2 - a2*b1])
+            elif self.__len__() == 2:
+                a1, a2 = self
+                b1, b2 = other
+                return Vector([0, 0, a1*b2 - a2*b1])
+            raise ValueError("The dimension of the 2 vectors must be less than or equal to 3.")
+        raise ValueError("The dimension of the 2 vectors must be the same.")
     
     def is_unit(self):
         """Tells whether the vector is a unit or not.
