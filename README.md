@@ -1,6 +1,8 @@
 # [matmath module](https://github.com/Siddhesh-Agarwal/matmath)
 
 A simple and efficient module for matrix manipulation.
+
+[![Downloads](https://static.pepy.tech/personalized-badge/matmath?period=total&units=international_system&left_color=lightgrey&right_color=green&left_text=Downloads)](https://pepy.tech/project/matmath)
 ___________________________________________________________________________
 
 ## Installing under Python
