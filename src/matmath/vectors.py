@@ -7,7 +7,7 @@ class Vector:
             self.vector = [0, 0]
         elif len(args) == 1:
             if isinstance(args[0], [int, float]):
-                raise ValueError("Vector takes atleast 2 arguements only 1 given.")
+                self.vector = [args[0]]
             else:
                 for arg in args:
                     if not isinstance(arg, [int, float]):
@@ -15,7 +15,7 @@ class Vector:
                 self.vector = list(args[0])
         else:
             for arg in args:
-                if isinstance(arg, [int, float]):
+                if not isinstance(arg, [int, float]):
                     raise ValueError("Vector can contain only numbers.")
             self.vector = list(args)
         self._index = 0
