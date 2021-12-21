@@ -1,2 +1,2 @@
-from matmath.matmath import *
-from matmath.vectors import *
+from matmath.matrices import Matrix
+from matmath.vectors import Vector
