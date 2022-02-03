@@ -1,39 +1,36 @@
 from math import pi, cos, sin, acos, sqrt
 
+
 class Vector:
     def __init__(self, *args):
         """Creates a vector out of the given args."""
         if len(args) == 0:
             self.vector = [0, 0]
         elif len(args) == 1:
-            if isinstance(args[0], [int, float]):
+            if isinstance(args[0], (int, float)):
                 self.vector = [args[0]]
             else:
-                for arg in args:
-                    if not isinstance(arg, [int, float]):
+                for arg in args[0]:
+                    if not isinstance(arg, (int, float)):
                         raise ValueError("Vector can contain only numbers.")
                 self.vector = list(args[0])
         else:
             for arg in args:
-                if not isinstance(arg, [int, float]):
+                if not isinstance(arg, (int, float)):
                     raise ValueError("Vector can contain only numbers.")
             self.vector = list(args)
         self._index = 0
-
 
     def __iter__(self):
         """Makes the vector iterable."""
         return self
 
-
     def __next__(self):
         """Returns the next iterator of the vector."""
         if self._index < len(self.vector):
-            result = self.vector[self._index]
             self._index += 1
-            return result
+            return self.vector[self._index - 1]
         raise StopIteration
-
 
     def __len__(self):
         """returns the number of elements in the vector."""
@@ -42,25 +39,16 @@ class Vector:
             length += 1
         return length
 
-
-    def __setitem__(self, key: int, value):
-        """Makes the vector mutable."""
-        self.vector[key] = value
-
-
     def __getitem__(self, key: int):
         """Returns the element at key in the vector."""
         return self.vector[key]
-
 
     def __repr__(self):
         """Returns a string construction of the vector"""
         return f"Vector({str(self.vector)[1:-1]})"
 
-
     def __str__(self):
-        return '<' + str(self.vector)[1: -1] + '>'
-
+        return "<" + str(self.vector)[1:-1] + ">"
 
     def __add__(self, other):
         """Adds 2 vectors of the same dimension.
@@ -87,10 +75,8 @@ class Vector:
             return Vector(ResultantVector)
         raise ValueError("The dimension of the 2 vectors must be the same.")
 
-
     def __radd__(self, other):
         return other.vector + self.vector
-
 
     def __sub__(self, other):
         """Subtracts 2 vectors of the same dimension.
@@ -99,7 +85,7 @@ class Vector:
         ----------
         other (Vector, compulsory)
             The second vector.
-            
+
         Returns
         -------
         Vector
@@ -117,7 +103,6 @@ class Vector:
             return Vector(ResultantVector)
         raise ValueError("The dimension of the 2 vectors must be the same.")
 
-
     def __rsub__(self, other):
         if len(self.vector) == len(other.vector):
             ResultantVector = []
@@ -125,7 +110,6 @@ class Vector:
                 ResultantVector.append(elem1 - elem2)
             return Vector(ResultantVector)
         raise ValueError("The dimension of the 2 vectors must be the same.")
-
 
     def __mul__(self, other):
         """Returns the product of vector and a number.
@@ -145,7 +129,7 @@ class Vector:
         ValueError
             Raised if the given element is not a number or a vector.
         """
-        if isinstance(other, [int, float]):
+        if isinstance(other, (int, float)):
             new = []
             for i in range(len(self.vector)):
                 new.append(self.vector[i] * other)
@@ -156,7 +140,6 @@ class Vector:
                 resultantVector.append(elem1 * elem2)
             return Vector(resultantVector)
         ValueError("Multiplication is not supported only for vectors and numbers.")
-
 
     def __rmul__(self, other):
         """Returns the product of vector and a number.
@@ -176,7 +159,7 @@ class Vector:
         ValueError
             Raised if the given element is not a number or a vector.
         """
-        if isinstance(other, [int, float]):
+        if isinstance(other, (int, float)):
             new = []
             for i in range(len(self.vector)):
                 new.append(self.vector[i] * other)
@@ -185,10 +168,8 @@ class Vector:
             return other.cross_product(self.vector)
         ValueError("Multiplication is not supported only for vectors and numbers.")
 
-
     def __matmul__(self, other):
         return self.cross_product(other)
-
 
     def __truediv__(self, number: float):
         """Divides the vector with the given number
@@ -204,10 +185,9 @@ class Vector:
             The vector divided with the given number.
         """
         if type(number) in [int, float]:
-            divided = [i/number for i in self]
+            divided = [i / number for i in self]
             return Vector(divided)
         TypeError("Only numbers are allowed.")
-
 
     def __eq__(self, other):
         """Tells whether the vectors are equal or not.
@@ -227,31 +207,21 @@ class Vector:
                 return False
         return True
 
-
     def __ne__(self, other):
         """Tells whether the vectors are not equal"""
         return not self.__eq__(other)
-
 
     def x(self):
         """Returns the first vector component."""
         return self.vector[0]
 
-
     def y(self):
         """Returns the second vector component."""
-        return self.vector[1] if len(self.vector) > 1 else 0
-
+        return self.vector[1]
 
     def z(self):
         """Returns the third vector component."""
-        return self.vector[2] if len(self.vector) > 2 else 0
-
-
-    def w(self):
-        """Returns the fourth vector component."""
-        return self.vector[3] if len(self.vector) > 3 else 0
-
+        return self.vector[2]
 
     def modulus(self):
         """Returns the modulus (length/magnitude) of the vector.
@@ -263,9 +233,8 @@ class Vector:
         """
         squared = 0
         for i in self:
-            squared += i**2
+            squared += i ** 2
         return sqrt(squared)
-
 
     def argument(self):
         """Returns the argument of the vector.
@@ -277,7 +246,6 @@ class Vector:
         """
         norm = self.modulus()
         return [acos(i / norm) for i in self]
-
 
     def unit_vector(self):
         """Returns the unit vector of the given vector.
@@ -294,7 +262,6 @@ class Vector:
         for element in self:
             UnitVector.append(element / mod)
         return Vector(UnitVector)
-
 
     def magnify(self, magnification: float = 1):
         """Returns the scaled-up or scaled-down version of the vector.
@@ -314,7 +281,6 @@ class Vector:
             NewVector.append(element * magnification)
         return Vector(NewVector)
 
-
     def rotate(self, theta=pi, radians=True):
         """Rotates the given vector by the given angle in clockwise direction.
 
@@ -330,7 +296,7 @@ class Vector:
         Vector
             The vector rotated through the given angle in clockwise direction.
 
-        Raises 
+        Raises
         ------
         ValueError
             Raised if the dimension of vector is not equal to 2.
@@ -344,7 +310,6 @@ class Vector:
             new_y = x * sin(theta) + y * cos(theta)
             return Vector(new_x, new_y)
         raise ValueError("The dimension of the vector must be equal to 2.")
-
 
     def dot_product(self, other):
         """The dot product of two vectors, if possible.
@@ -371,7 +336,6 @@ class Vector:
             return dotproduct
         raise ValueError("The dimension of the 2 vectors must be the same.")
 
-
     def cross_product(self, other):
         """Returns the cross product of 2 vectors.
 
@@ -396,14 +360,15 @@ class Vector:
             if self.__len__() == 3:
                 a1, a2, a3 = self
                 b1, b2, b3 = other
-                return Vector([a2*b3 - a3*b2, a3*b1 + a1*b3, a1*b2 - a2*b1])
+                return Vector([a2 * b3 - a3 * b2, a3 * b1 + a1 * b3, a1 * b2 - a2 * b1])
             elif self.__len__() == 2:
                 a1, a2 = self
                 b1, b2 = other
-                return Vector([0, 0, a1*b2 - a2*b1])
-            raise ValueError("The dimension of the 2 vectors must be less than or equal to 3.")
+                return Vector([0, 0, a1 * b2 - a2 * b1])
+            raise ValueError(
+                "The dimension of the 2 vectors must be less than or equal to 3."
+            )
         raise ValueError("The dimension of the 2 vectors must be the same.")
-
 
     def is_unit(self):
         """Tells whether the vector is a unit vector or not.
@@ -419,7 +384,6 @@ class Vector:
             if sum_of_squares > 1:
                 return False
         return sum_of_squares == 1
-
 
     def is_parellel(self, other):
         """Tells whether the vectors are parellel or not.
