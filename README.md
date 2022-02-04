@@ -2,59 +2,56 @@
 
 A simple and efficient module for matrix manipulation.
 
-![Downloads](https://static.pepy.tech/personalized-badge/matmath?period=total&units=international_system&left_color=lightgrey&right_color=green&left_text=Downloads)
-___________________________________________________________________________
+---
 
 ## Installing under Python
 
-When installing the **matmath module** for python, it is recommended that you check if you have **python 3.6 or above**.
-To install matmath, goto a terminal and run:
+When installing the **matmath module** for python, it is recommended that you check if you have **python 3.6 or above**. To install matmath, goto a terminal and run:
 
-    pip3 install matmath
-___________________________________________________________________________
+    pip install matmath
+
+To upgrade matmath, run:
+
+    pip install --upgrade matmath
+
+---
 
 ## Functions and their uses
 
+The `Matrix` and `Vector` classes support all mathematical operations like addition, subtraction, multiplication, division, matrix multiplication, etc. Apart from that, the `Matrix` class also supports the following functions:
+
 ### Matrix related functions
 
-| Functions         | Description                                                                                                |
-| ----------------- | ---------------------------------------------------------------------------------------------------------- |
-| `adj`             | Returns the adjoint of the matrix multiplied by the multiplication factor.                                 |
-| `compatAS`        | Tells if the addition/subtractition of the matrices is mathematically possible.                            |
-| `compatM`         | Tells if the multiplication of the matrices is mathematically possible.                                    |
-| `cut`             | Returns a smaller matrix by removing the required row and column. The default of row and column is 0.      |
-| `det`             | Returns the determinant of the matrix (if mathematically possible).                                        |
-| `Identity`        | Returns an identity matrix of order N x N multiplied by the multiplication factor.                         |
-| `inv`             | Returns the inverse of the matrix (if mathematically possible) multiplied by the multiplication factor.    |
-| `isDiagonal`      | Tells if input is a diagonal matrix.                                                                       |
-| `isIdentity`      | Tells if input is an identity matrix.                                                                      |
-| `isLTriangular`   | Tells if input is a lower triangular matrix.                                                               |
-| `isMatrix`        | Tells if input is actually a matrix.                                                                       |
-| `isNull`          | Tells if input is a null matrix.                                                                           |
-| `isSkewSymmetric` | Tells if input is a skew symmetric matrix.                                                                 |
-| `isSquare`        | Tells if input is a square matrix.                                                                         |
-| `isSymmetric`     | Tells if input is a symmetric matrix.                                                                      |
-| `isUTriangular`   | Tells if input is an upper triangular matrix.                                                              |
-| `matAdd`          | Returns the sum matrix (i.e. A + B), if mathematically possible.                                           |
-| `matMul`          | Returns the product matrix (i.e. AB), if mathematically possible.                                          |
-| `matSub`          | Returns the difference matrix (i.e. A - B), if mathematically possible.                                    |
-| `Null`            | Returns a null matrix of order N x M. If only 1 parameter is given returns a null matrix of order N x N.   |
-| `order`           | Returns the order of the matrix as a tuple of the form (rows, columns).                                    |
-| `power`           | Returns the n<sup>th</sup> power of matrix A, if mathematically possible.                                  |
-| `rotate`          | Returns a matrix which is formed by rotating the given matrix, n times, in clockwise sense.                |
-| `scalarMul`       | Returns the scalar product of A and n (i.e. nA).                                                           |
-| `trace`           | Returns the trace of the matrix (i.e the product of elements on the diagonal), if mathematically possible. |
-| `transpose`       | Returns the transpose of the matrix.                                                                       |
-
-**NOTE**: Default value of mul (multiplication factor) is always 1.
+| Functions                | Description                                                                                              |
+| :----------------------- | -------------------------------------------------------------------------------------------------------- |
+| `.adjoint()`             | Returns the adjoint of the matrix.                                                                       |
+| `.adj()`                 | Alias of `.adjoint()`                                                                                    |
+| `.cofactor()`            | Returns the cofactor of the matrix.                                                                      |
+| `.copy()`                | Returns a copy of the matrix.                                                                            |
+| `.cut()`                 | Returns a smaller matrix by removing the required row and column. The default of row and column is None. |
+| `.determinant()`         | Returns the determinant of the matrix (if mathematically possible).                                      |
+| `.det()`                 | Alias of `.determinant()`.                                                                               |
+| `.inverse()`             | Returns the inverse of the matrix (if mathematically possible) multiplied by the multiplication factor.  |
+| `.inv()`                 | Alias of `.inverse()`.                                                                                   |
+| `.is_diagonal()`         | Tells if input is a diagonal matrix.                                                                     |
+| `.is_identity()`         | Tells if input is an identity matrix.                                                                    |
+| `.is_lower_triangular()` | Tells if input is a lower triangular matrix.                                                             |
+| `.is_null()`             | Tells if input is a null matrix.                                                                         |
+| `.is_skew_symmetric()`   | Tells if input is a skew symmetric matrix.                                                               |
+| `.is_square()`           | Tells if input is a square matrix.                                                                       |
+| `.is_symmetric()`        | Tells if input is a symmetric matrix.                                                                    |
+| `.is_upper_triangular()` | Tells if input is an upper triangular matrix.                                                            |
+| `.order()`               | Returns the order of the matrix as a tuple of the form (rows, columns).                                  |
+| `.rotate()`              | Returns a matrix which is formed by rotating the given matrix, n times, in clockwise sense.              |
+| `.trace()`               | Returns the trace of the matrix, if mathematically possible.                                             |
+| `.transpose()`           | Returns the transpose of the matrix.                                                                     |
+| `identity()`             | Returns an identity matrix of order N x N multiplied by the multiplication factor.                       |
+| `zero()`                 | Returns a null matrix of order N x M. If only 1 parameter is given returns a null matrix of order N x N. |
 
 ### Vector related functions
 
-| Functions       | Description                                                 |
+| Method          | Description                                                 |
 | --------------- | ----------------------------------------------------------- |
-| `__getitem__`   | Returns the vector at the given index.                      |
-| `__len__`       | Returns the length of the vector.                           |
-| `__setitem__`   | changes the value of the vector using the key.              |
 | `argument`      | Returns the argument of the vector.                         |
 | `cross_product` | Cross product of the vector with respect to another vector. |
 | `dot_product`   | Dot product of the vector with respect to another vector.   |
@@ -63,17 +60,21 @@ ___________________________________________________________________________
 | `magnify`       | Magnifies a vector.                                         |
 | `modulus`       | Returns the modulus of the vector.                          |
 | `rotate`        | Rotates the 2d vector in 2D space.                          |
-| `unitVector`    | Returns the unit vector in the direction of the vector.     |
-___________________________________________________________________________
+| `unit_vector`   | Returns the unit vector in the direction of the vector.     |
+| `x`             | Returns the 1st component of the vector.                    |
+| `y`             | Returns the 2nd component of the vector.                    |
+| `z`             | Returns the 3rd component of the vector.                    |
+
+---
 
 ## Contact
 
 Please feel free to reach out if you have any questions:
 
 - **Name**: Siddhesh Agarwal
-- **E-mail**: siddhesh.agarwal@gmail.com
+- **E-mail**: [siddhesh.agarwal@gmail.com](mailto:siddhesh.agarwal@gmail.com)
 
-___________________________________________________________________________
+---
 
 ## License
 
