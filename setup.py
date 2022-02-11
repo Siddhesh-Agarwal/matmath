@@ -1,20 +1,18 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = "matmath",
-    version = "v2.1.1",
-    author = "Siddhesh Agarwal",
-    author_email = "siddhesh.agarwal@gmail.com",
-    description = "A simple and efficient module for matrix and vector manipulation.",
-    long_description = open('README.md').read(),
-    long_description_content_type = "text/markdown",
-    license = "MIT",
-    url = "https://github.com/Siddhesh-Agarwal/matmath",
-    project_urls = {
-        'Bug Tracker': 'https://github.com/Siddhesh-Agarwal/matmath/issues'
-    },
-    keywords = ["matrix", "matrices", "vector", "vectors"],
-    classifiers = [
+    name="matmath",
+    version="v3.0.0rc1",
+    author="Siddhesh Agarwal",
+    author_email="siddhesh.agarwal@gmail.com",
+    description="A simple and efficient module for matrix and vector manipulation.",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
+    license="MIT",
+    url="https://github.com/Siddhesh-Agarwal/matmath",
+    project_urls={"Bug Tracker": "https://github.com/Siddhesh-Agarwal/matmath/issues"},
+    keywords=["matrix", "matrices", "vector", "vectors"],
+    classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "Intended Audience :: Education",
@@ -30,7 +28,7 @@ setup(
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Mathematics",
     ],
-    packages = find_packages(),
-    package_data = {"matmath": ["py.typed"]},
-    include_package_data = True,
+    packages=find_packages(),
+    package_data={"matmath": ["py.typed"]},
+    include_package_data=True,
 )

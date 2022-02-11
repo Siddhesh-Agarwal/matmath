@@ -1,11 +1,11 @@
 # Changelog
 
-_______________________________
+---
 
 ## 16 June 2021 - v1.0.0
 
 - Initial Release.
-  
+
 ## 18 June 2021 - v1.0.1
 
 - Renamed `mmath.py` to `matmath.py`.
@@ -43,14 +43,16 @@ _______________________________
 - Now call `Vector(n)` to generate a n-dimensional zero vector. n defaults to 2.
 - Corrected problem in `rotate()` in `Vector` class.
 
-## Date here - v2.2.0
+## Date here - v3.0.0
 
 - Made multiple corrections that solved a few significant bugs.
-- `matmath.py` has been converted into a python class called `Matrix`.
+- `matmath.py` has been converted into from a simple function definitions into a full fledge function class called `Matrix`.
 - Removed `compatM()` and `compatAS()` from `Vector` class.
 - Improved `__init__`, `__iter__`, `__next__`, `__repr__` and `__str__` methods in `Vector` class.
 - Added support for `__matmul__` method and made changes to `__mul__` method to `Vector` class.
-- Added support for `!=` operator to `Vector` class.
+- removed `__radd__`, `__rsub__` and `__rmul__` methods from vector class (methods were not needed).
+- Added support for `!=` and `==` operator to `Vector` class.
 - Created alias for `arguement` - `arg` in `Vector` class.
 - Added support for `__radd__` and `__rsub__` methods to `Vector` class.
 - Added `minor()` and `cofactor()` methods to `Matrix` class.
+- `__setitem__` method in `Vector` class has ben deprecated.
