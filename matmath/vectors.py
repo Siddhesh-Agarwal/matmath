@@ -3,7 +3,6 @@ from math import acos, cos, pi, sin, sqrt
 
 class Vector:
     def __init__(self, *args):
-        """Creates a vector out of the given args."""
         if len(args) == 0:
             self.vector = [0, 0]
         elif len(args) == 1:
@@ -46,26 +45,11 @@ class Vector:
         return f"Vector({ str(self.vector)[1:-1] })"
 
     def __str__(self):
+        """Returns a string representation of the vector."""
         return "<" + str(self.vector)[1:-1] + ">"
 
     def __add__(self, other):
-        """Adds 2 vectors of the same dimension.
-
-        Parameters
-        ----------
-        other (Vector, compulsory)
-            The second vector.
-
-        Returns
-        -------
-        Vector
-            Sum of 2 vectors.
-
-        Raises
-        ------
-        TypeError
-            Raised if the dimension of vectors are not equal.
-        """
+        """Adds 2 vectors of the same dimension."""
         if self.length == len(other):
             ResultantVector = []
             for elem1, elem2 in zip(self.vector, other):
@@ -74,23 +58,7 @@ class Vector:
         raise TypeError("The dimension of the 2 vectors must be the same.")
 
     def __sub__(self, other):
-        """Subtracts 2 vectors of the same dimension.
-
-        Parameters
-        ----------
-        other (Vector, compulsory)
-            The second vector.
-
-        Returns
-        -------
-        Vector
-            Difference of 2 vectors.
-
-        Raises
-        ------
-        TypeError
-            Raised if the dimension of vectors are not equal.
-        """
+        """Subtracts 2 vectors of the same dimension."""
         if self.length == len(other):
             ResultantVector = []
             for elem1, elem2 in zip(self.vector, other):
@@ -99,72 +67,38 @@ class Vector:
         raise TypeError("The dimension of the 2 vectors must be the same.")
 
     def __mul__(self, other):
-        """Returns the product of vector and a number.
-
-        Parameters
-        ----------
-        other (int/float/Vector, compulsory)
-            The second vector.
-
-        Returns
-        -------
-        Vector
-            product of the two.
-
-        Raises
-        ------
-        TypeError
-            Raised if the given element is not a number or a vector.
-        """
+        """Returns the product of vector and a number."""
         if isinstance(other, (int, float)):
             new = []
-            for i in range(len(self.vector)):
+            for i in range(self.length):
                 new.append(self.vector[i] * other)
             return Vector(new)
         elif isinstance(other, Vector):
             resultantVector = []
-            for elem1, elem2 in zip(self.vector, other):
+            for elem1, elem2 in zip(self.vector, other.vector):
                 resultantVector.append(elem1 * elem2)
             return Vector(resultantVector)
         raise TypeError(
             f"Mutiplication not supported between type Vector and type {type(other)}."
         )
 
+    def __rmul__(self, other):
+        """Returns the product of a number and a vector."""
+        return self * other
+
     def __matmul__(self, other):
         """Matrix multiplication (cross product) of two vectors."""
         return self.cross_product(other)
 
     def __truediv__(self, number: float):
-        """Divides the vector with the given number
-
-        Args
-        ----
-        number (float, compulsory)
-            The number to divide.
-
-        Returns
-        -------
-        Vector
-            The vector divided with the given number.
-        """
+        """Divides the vector with the given number"""
         if isinstance(number, (int, float)):
             divided = [i / number for i in self]
             return Vector(divided)
         raise TypeError("can only divide by numbers.")
 
     def __eq__(self, other):
-        """Tells whether the vectors are equal or not.
-
-        Parameters
-        ----------
-        other (Vector, compulsory)
-            The second vector.
-
-        Returns
-        -------
-        bool
-            True if vectors are equal, False otherwise.
-        """
+        """Tells whether the vectors are equal or not."""
         for i, j in zip(self, other):
             if i != j:
                 return False
@@ -334,13 +268,7 @@ class Vector:
         raise ValueError("The dimension of the 2 vectors must be the same.")
 
     def is_unit(self):
-        """Tells whether the vector is a unit vector or not.
-
-        Returns
-        -------
-        bool
-            True if the vector is a unit vector, False otherwise.
-        """
+        """Tells whether the vector is a unit vector or not."""
         sum_of_squares = 0
         for i in self.vector:
             sum_of_squares += i ** 2
@@ -349,18 +277,7 @@ class Vector:
         return sum_of_squares == 1
 
     def is_parellel(self, other):
-        """Tells whether the vectors are parellel or not.
-
-        Parameter
-        ---------
-        other (Vector, compulsory)
-            The second vector.
-
-        Returns
-        -------
-        bool
-            True if the vectors are parellel, False otherwise.
-        """
+        """Tells whether the vectors are parellel or not."""
         ratio = self[0] / other[0]
         for i, j in zip(self, other):
             if i / j != ratio:

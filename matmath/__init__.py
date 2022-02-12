@@ -1,2 +1,2 @@
-from matmath.matrices import Matrix, zero, identity
+from matmath.matrices import Matrix, identity, zero
 from matmath.vectors import Vector

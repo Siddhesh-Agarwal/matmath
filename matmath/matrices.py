@@ -16,11 +16,9 @@ class Matrix:
         # Check if not empty
         if len(matrix) == 0:
             raise ValueError("Matrix must have at least one element.")
-
         # reset Matrx if there is only one element inside the matrix
         if len(matrix) == 1 and isinstance(matrix[0][0], (list, tuple)):
             matrix = matrix[0]
-
         # Check if rows are iteratable
         try:
             for row in matrix:
@@ -37,7 +35,6 @@ class Matrix:
                         )
         except TypeError:
             raise TypeError("Matrix arguement should be iteratable.")
-
         # Check if number of elements in each row is the same.
         no_of_cols = len(matrix[0])
         no_of_rows = 0
@@ -47,16 +44,18 @@ class Matrix:
                 raise ValueError(
                     "The number of elements in the matrix should be equal."
                 )
-
         # Initialize variables
         self.matrix = [list(row) for row in matrix]
-        self.rows = no_of_rows  # Number of rows
-        self.cols = no_of_cols  # Number of columns
-        self._index = 0  # Used for iterating over the matrix
+        self.rows = no_of_rows   # Number of rows
+        self.cols = no_of_cols   # Number of columns
+        self._index = 0          # Used for iterating over the matrix
+
+    def __len__(self):
+        return self.rows
 
     def __iter__(self):
         """Returns an iterator over the elements of the matrix."""
-        return self
+        return iter(self.matrix)
 
     def __next__(self):
         """Returns the next element of the matrix."""
@@ -71,7 +70,7 @@ class Matrix:
 
     def __str__(self):
         """Returns a string representation of the matrix"""
-        length = len(self.matrix)
+        length = self.rows
         string = ["| "] * length
         for i in range(len(self.matrix[0])):
             temp = []
@@ -99,65 +98,34 @@ class Matrix:
 
     def __ne__(self, other):
         """Checks if the matrix is not equal to another matrix"""
-        return not self.__eq__(other)
+        return not (self.matrix == other.matrix)
 
     def __add__(self, anotherObj):
-        """Returns the sum matrix (A+B), if mathematically possible.
-
-        Args
-            anotherObj (Matrix, compulsory): Another matrix.
-
-        Returns
-            arr (Matrix): The matrix representing the sum of the two matrices.
-
-        Raises
-            ValueError: Raised when the addition of the two matrices is not possible.
-        """
+        """Returns the sum of the matrices."""
         if self.order() == anotherObj.order():
             matrix = []
-            for i in range(len(self.matrix)):
+            for i in range(self.rows):
                 temp = []
-                for j in range(len(self.matrix[i])):
+                for j in range(self.cols):
                     temp.append(self.matrix[i][j] + anotherObj[i][j])
                 matrix.append(temp)
             return Matrix(matrix)
         raise ValueError("The 2 matrices do not have the same order.")
 
     def __sub__(self, anotherObj):
-        """Returns the difference matrix (A-B), if mathematically possible.
-
-        Args
-            anotherObj (Matrix, compulsory): Another matrix.
-
-        Returns
-            arr (Matrix): The matrix representing the difference of the two matrices.
-
-        Raises
-            ValueError: Raised when the subtraction of the two matrices is not possible.
-        """
+        """Returns the difference of the matrices"""
         if self.order() == anotherObj.order():
             matrix = []
-            for i in range(self.length):
+            for i in range(self.rows):
                 temp = []
-                for j in range(len(self.matrix[i])):
+                for j in range(self.cols):
                     temp.append(self.matrix[i][j] - anotherObj[i][j])
                 matrix.append(temp)
             return Matrix(matrix)
         raise ValueError("The 2 matrices do not have the same order.")
 
     def __mul__(self, anotherObj):
-        """Returns the scalar product of A and n (nA)
-
-        Args
-        ----
-        anotherObj (int/float, optional)
-            The multiplication factor.
-
-        Returns
-        -------
-        Matrix
-            The matrix multiplied with the multiplication factor
-        """
+        """Returns the product of a matrix and a nuber/matrix."""
         if isinstance(anotherObj, [int, float]):  # Scalar multiplication
             prod = []
             for row in self.matrix:
@@ -166,9 +134,9 @@ class Matrix:
             return Matrix(prod)
         elif isinstance(anotherObj, Matrix):
             matrix = []
-            for i in range(len(self.matrix)):
+            for i in range(self.rows):
                 temp = []
-                for j in range(len(self.matrix[i])):
+                for j in range(self.cols):
                     temp.append(self.matrix[i][j] * anotherObj[i][j])
                 matrix.append(temp)
             return matrix
@@ -176,10 +144,15 @@ class Matrix:
             f"Mutiplication not supported between type Matrix and type {type(anotherObj)}."
         )
 
+    def __rmul__(self, otherObj):
+        """Returns the product of a matrix and a nuber/matrix."""
+        return self * otherObj
+
     def __matmul__(self, anotherObj):
+        """Returns the cross product of two matrices."""
         if isinstance(anotherObj, Matrix):  # Matrix multiplication
             arr = []
-            length = len(self.matrix)
+            length = self.rows
             for i in range(length):
                 arr.append([])
                 for j in range(length):
@@ -190,26 +163,7 @@ class Matrix:
             return Matrix(arr)
 
     def __pow__(self, power=2):
-        """Returns the matrix representing the n^th power of matrix A, if mathematically possible.
-
-        Args
-        ----
-        power (int, optional)
-            The power of the matrix. defaults to 2.
-
-        Returns
-        -------
-        Matrix
-            The matrix represting the n^th power of the matrix A.
-
-        Raises
-        ------
-        ValueError
-            Raised if the power is not a whole number.
-        ValueError
-            Raised if the matrix is not a square matrix.
-        """
-
+        """Returns the matrix representing the n^th power of matrix A, if mathematically possible."""
         if self.cols == self.rows:
             if isinstance(power, int) and int > 0:
                 matrix = self.matrix
@@ -261,13 +215,17 @@ class Matrix:
         return (-1) ** (i + j) * self.minor(i, j)
 
     def copy(self):
-        """Returns a copy of this matrix.
+        """Returns a shallow copy of this matrix.
 
         Returns
         -------
         a copy of this matrix
         """
-        return Matrix(self.matrix)
+        new_matrix = []
+        for row in range(self.matrix):  # O(m*n)
+            new_row = [element for element in row]
+            new_matrix.append(new_row)
+        return Matrix(new_matrix)
 
     def cut(self, i=None, j=None):
         """Returns a new matrix after removing the i th row and/or j th column.
