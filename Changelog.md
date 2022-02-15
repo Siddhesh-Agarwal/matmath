@@ -43,7 +43,7 @@
 - Now call `Vector(n)` to generate a n-dimensional zero vector. n defaults to 2.
 - Corrected problem in `rotate()` in `Vector` class.
 
-## Date here - v3.0.0
+## 15 February 2022 - v3.0.0
 
 - Made multiple corrections that solved a few significant bugs.
 - `matmath.py` has been converted into from a simple function definitions into a full fledge function class called `Matrix`.
@@ -56,3 +56,13 @@
 - Added support for `__radd__` and `__rsub__` methods to `Vector` class.
 - Added `minor()` and `cofactor()` methods to `Matrix` class.
 - `__setitem__` method in `Vector` class has ben deprecated.
+- `x()`, `y()` and `z()` methods in `Vector` class have ben deprecated. (using indexing instead)
+- improved importing.
+
+Now you can use:
+
+    from matmath import Matrix, Vector
+
+instead of importing like this:
+
+    from matmath.matmath import Matrix, Vector

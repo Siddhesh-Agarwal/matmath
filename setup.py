@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="matmath",
-    version="v3.0.0rc1",
+    version="v3.0.0",
     author="Siddhesh Agarwal",
     author_email="siddhesh.agarwal@gmail.com",
     description="A simple and efficient module for matrix and vector manipulation.",
@@ -10,7 +10,9 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     url="https://github.com/Siddhesh-Agarwal/matmath",
-    project_urls={"Bug Tracker": "https://github.com/Siddhesh-Agarwal/matmath/issues"},
+    project_urls={
+        "Bug Tracker": "https://github.com/Siddhesh-Agarwal/matmath/issues"
+    },
     keywords=["matrix", "matrices", "vector", "vectors"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",

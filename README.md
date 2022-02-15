@@ -2,6 +2,8 @@
 
 A simple and efficient module for matrix manipulation.
 
+[![Downloads](https://pepy.tech/badge/matmath)](https://pepy.tech/project/matmath)
+
 ---
 
 ## Installing under Python
