@@ -171,12 +171,8 @@ class Matrix:
                     matrix = matrix * self.matrix
                 return matrix
             elif power == 0:
-                matrix = []
-                for i in range(self.rows):
-                    temp = [0] * self.cols
-                    temp[i] = 1
-                    matrix.append(temp)
-                return matrix
+                matrix = identity(self.rows)
+                return Matrix(matrix)
             raise ValueError(
                 "The power of the matrix must be a natural number")
         raise ValueError("The given matrix is not a square matrix.")

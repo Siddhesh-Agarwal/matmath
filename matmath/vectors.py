@@ -50,18 +50,18 @@ class Vector:
 
     def __add__(self, other):
         """Adds 2 vectors of the same dimension."""
-        if self.length == len(other):
+        if self.length == len(other.vector):
             ResultantVector = []
-            for elem1, elem2 in zip(self.vector, other):
+            for elem1, elem2 in zip(self.vector, other.vector):
                 ResultantVector.append(elem1 + elem2)
             return Vector(ResultantVector)
         raise TypeError("The dimension of the 2 vectors must be the same.")
 
     def __sub__(self, other):
         """Subtracts 2 vectors of the same dimension."""
-        if self.length == len(other):
+        if self.length == len(other.vector):
             ResultantVector = []
-            for elem1, elem2 in zip(self.vector, other):
+            for elem1, elem2 in zip(self.vector, other.vector):
                 ResultantVector.append(elem1 - elem2)
             return Vector(ResultantVector)
         raise TypeError("The dimension of the 2 vectors must be the same.")
@@ -107,18 +107,6 @@ class Vector:
     def __ne__(self, other):
         """Tells whether the vectors are not equal"""
         return not self.__eq__(other)
-
-    def x(self):
-        """Returns the first vector component."""
-        return self.vector[0]
-
-    def y(self):
-        """Returns the second vector component."""
-        return self.vector[1]
-
-    def z(self):
-        """Returns the third vector component."""
-        return self.vector[2]
 
     def modulus(self):
         """Returns the modulus (length/magnitude) of the vector.
@@ -171,7 +159,7 @@ class Vector:
         Returns
         -------
         Vector
-            A vector (whose magnitude = magnitude of original vector * magnification) in the same direction as the given vector.
+            A vector (= vector * magnification) in the same direction as the given vector.
         """
         NewVector = []
         for element in self.vector:
@@ -198,14 +186,16 @@ class Vector:
         ValueError
             Raised if the dimension of vector is not equal to 2.
         """
-        if self.__len__() == 2:
+        if self.length == 2:
             x = self.vector[0]
-            y = self.vector[1]
+            y = self.vector[-1]
             if not radians:
                 theta = theta * pi / 180
             new_x = x * cos(theta) - y * sin(theta)
             new_y = x * sin(theta) + y * cos(theta)
-            return Vector(new_x, new_y)
+            rotated = [new_x, *self.vector[1:-1], new_y]
+            return Vector(rotated)
+
         raise ValueError("The dimension of the vector must be equal to 2.")
 
     def dot_product(self, other):
@@ -253,12 +243,12 @@ class Vector:
         ValueError
             Raised if the dimension of vectors is not equal to 2 or 3.
         """
-        if self.__len__() == len(other):
-            if self.__len__() == 3:
+        if self.length == len(other):
+            if self.length == 3:
                 a1, a2, a3 = self
                 b1, b2, b3 = other
                 return Vector([a2 * b3 - a3 * b2, a3 * b1 - a1 * b3, a1 * b2 - a2 * b1])
-            elif self.__len__() == 2:
+            elif self.length == 2:
                 a1, a2 = self
                 b1, b2 = other
                 return Vector([0, 0, a1 * b2 - a2 * b1])
