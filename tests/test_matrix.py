@@ -1,4 +1,4 @@
-from matmath.matrices import Matrix
+from matmath import Matrix
 import unittest
 
 class TestMatrix(unittest.TestCase):
