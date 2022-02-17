@@ -92,9 +92,9 @@ class TestVector(unittest.TestCase):
     # Test component retrieval
     def test_component_retrieval(self):
         vec1 = Vector(1, 2, 3)
-        self.assertEquals(vec1.x, vec1[0], 1)
-        self.assertEquals(vec1.y, vec1[1], 2)
-        self.assertEquals(vec1.z, vec1[2], 3)
+        self.assertEqual(vec1[0], 1)
+        self.assertEqual(vec1[1], 2)
+        self.assertEqual(vec1[2], 3)
 
     def test_modulus(self):
         vec1 = Vector(2, 3, 6)
