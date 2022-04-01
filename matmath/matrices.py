@@ -16,7 +16,7 @@ class Matrix:
         # Check if not empty
         if len(matrix) == 0:
             raise ValueError("Matrix must have at least one element.")
-        # reset Matrx if there is only one element inside the matrix
+        # reset Matrix if there is only one element inside the matrix
         if len(matrix) == 1 and isinstance(matrix[0][0], (list, tuple)):
             matrix = matrix[0]
         # Check if rows are iteratable
@@ -24,8 +24,7 @@ class Matrix:
             for row in matrix:
                 # Check if rows are lists or tuples
                 if not isinstance(row, (list, tuple)):
-                    raise ValueError(
-                        f"Matrix must contain list/tuples not {type(row)}")
+                    raise ValueError(f"Matrix must contain list/tuples not {type(row)}")
                 iter_check = iter(row)
                 # Confirm that elements are numbers.
                 for element in iter_check:
@@ -34,7 +33,7 @@ class Matrix:
                             f"Matrix must contain only numbers not {type(element)}"
                         )
         except TypeError:
-            raise TypeError("Matrix arguement should be iteratable.")
+            raise TypeError("Matrix argument should be iteratable.")
         # Check if number of elements in each row is the same.
         no_of_cols = len(matrix[0])
         no_of_rows = 0
@@ -46,27 +45,28 @@ class Matrix:
                 )
         # Initialize variables
         self.matrix = [list(row) for row in matrix]
-        self.rows = no_of_rows   # Number of rows
-        self.cols = no_of_cols   # Number of columns
-        self._index = 0          # Used for iterating over the matrix
+        self.rows = no_of_rows  # Number of rows
+        self.cols = no_of_cols  # Number of columns
+        self.__index = 0  # Used for iterating over the matrix
 
     def __len__(self):
+        """Returns the number of rows in the matrix"""
         return self.rows
 
     def __iter__(self):
-        """Returns an iterator over the elements of the matrix."""
+        """Returns an iterator over the elements of the matrix"""
         return iter(self.matrix)
 
     def __next__(self):
-        """Returns the next element of the matrix."""
-        if self._index < len(self.matrix):
-            self._index += 1
-            return self.matrix[self._index - 1]
+        """Returns the next element of the matrix"""
+        if self.__index < len(self.matrix):
+            self.__index += 1
+            return self.matrix[self.__index - 1]
         raise StopIteration
 
-    def __getitem__(self, key):
+    def __getitem__(self, r, c):
         """Returns the element at the specified key"""
-        return self.matrix[key]
+        return self.matrix[r][c]
 
     def __str__(self):
         """Returns a string representation of the matrix"""
@@ -101,7 +101,7 @@ class Matrix:
         return not (self.matrix == other.matrix)
 
     def __add__(self, anotherObj):
-        """Returns the sum of the matrices."""
+        """Returns the sum of the matrices"""
         if self.order() == anotherObj.order():
             matrix = []
             for i in range(self.rows):
@@ -125,7 +125,7 @@ class Matrix:
         raise ValueError("The 2 matrices do not have the same order.")
 
     def __mul__(self, anotherObj):
-        """Returns the product of a matrix and a nuber/matrix."""
+        """Returns the product of a matrix and a number/matrix"""
         if isinstance(anotherObj, [int, float]):  # Scalar multiplication
             prod = []
             for row in self.matrix:
@@ -141,26 +141,26 @@ class Matrix:
                 matrix.append(temp)
             return matrix
         raise TypeError(
-            f"Mutiplication not supported between type Matrix and type {type(anotherObj)}."
+            f"Multiplication not supported between type Matrix and type {type(anotherObj)}."
         )
 
     def __rmul__(self, otherObj):
-        """Returns the product of a matrix and a nuber/matrix."""
+        """Returns the product of a matrix and a number/matrix"""
         return self * otherObj
 
-    def __matmul__(self, anotherObj):
-        """Returns the cross product of two matrices."""
-        if isinstance(anotherObj, Matrix):  # Matrix multiplication
+    def __matmul__(self, other):
+        """Returns the cross product of two matrices"""
+        if isinstance(other, Matrix):  # Matrix multiplication
             arr = []
-            length = self.rows
-            for i in range(length):
+            for i in range(self.rows):
                 arr.append([])
-                for j in range(length):
+                for j in range(other.rows):
                     total = 0
-                    for k in range(length):
-                        total += self.matrix[i][k] * anotherObj.matrix[k][j]
+                    for k in range(self.cols):
+                        total += self.matrix[i][k] * other.matrix[k][j]
                     arr[i].append(total)
             return Matrix(arr)
+        raise ValueError(f"Passed object is not of {type(self)}")
 
     def __pow__(self, power=2):
         """Returns the matrix representing the n^th power of matrix A, if mathematically possible."""
@@ -173,8 +173,7 @@ class Matrix:
             elif power == 0:
                 matrix = identity(self.rows)
                 return Matrix(matrix)
-            raise ValueError(
-                "The power of the matrix must be a natural number")
+            raise ValueError("The power of the matrix must be a natural number")
         raise ValueError("The given matrix is not a square matrix.")
 
     def adjoint(self):
@@ -193,22 +192,22 @@ class Matrix:
             matrix.append(temp)
         return Matrix(matrix).transpose()
 
-    def cofactor(self, i, j):
+    def cofactor(self, i: int, j: int):
         """Returns the cofactor representation of the matrix.
 
         Args
         ----
-        i : integer
+        i: int
             The index of the row of the matrix.
-        j : integer
+        j: int
             The index of the column of the matrix.
 
         Returns
         -------
-        cofactor : integer
+        cofactor: float
             The cofactor representation of the matrix.
         """
-        return (-1) ** (i + j) * self.minor(i, j)
+        return float((-1) ** (i + j) * self.minor(i, j))
 
     def copy(self):
         """Returns a shallow copy of this matrix.
@@ -225,6 +224,7 @@ class Matrix:
 
     def cut(self, i=None, j=None):
         """Returns a new matrix after removing the i th row and/or j th column.
+        Will remove no row and column (by default).
 
         Args
         ----
@@ -243,17 +243,15 @@ class Matrix:
         ValueError
             Raised if the row or column to be removed is not a natural number.
         """
-        # if both i and j are None
         if i is None and j is None:
-            return self
-        # if i is not None and j is None
+            matrix = self.copy()
+            return Matrix(matrix)
         elif all([i is not None, i >= 0, i < self.rows, j is None]):
             matrix = []
             for k in range(self.rows):
                 if k != i:
                     matrix.append(self.matrix[k])
             return Matrix(matrix)
-        # if i is None and j is not None
         elif all([j is not None, j >= 0, j < self.cols, i is None]):
             matrix = []
             for k in range(self.rows):
@@ -263,10 +261,9 @@ class Matrix:
                         temp.append(self.matrix[k][l])
                 matrix.append(temp)
             return Matrix(matrix)
-        # if both i and j are not None
         elif all(
-                [i is not None, j is not None, i >= 0,
-                 i < self.rows, j >= 0, j < self.cols]):
+            [i is not None, j is not None, i >= 0, i < self.rows, j >= 0, j < self.cols]
+        ):
             matrix = []
             for k in range(self.rows):
                 if k != i:
@@ -276,8 +273,7 @@ class Matrix:
                             temp.append(self.matrix[k][l])
                     matrix.append(temp)
             return Matrix(matrix)
-        raise ValueError(
-            "The row or column to be removed is not a natural number.")
+        raise ValueError("The row or column to be removed is not a natural number.")
 
     def determinant(self):
         """Returns the determinant of this matrix.
@@ -413,7 +409,8 @@ class Matrix:
         ValueError
             Raised if the row or column to be removed is not a natural number.
         """
-        return self.cut(i, j).determinant()
+        reduced = self.cut(i, j)
+        return reduced.determinant()
 
     def order(self):
         """Returns the order of the matrix.
@@ -465,7 +462,7 @@ class Matrix:
             total = 0
             for i in range(self.rows):
                 total += self.matrix[i][i]
-            return Matrix(total)
+            return total
         raise ValueError("The given matrix is not a square matrix.")
 
     def transpose(self):
