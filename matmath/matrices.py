@@ -100,53 +100,110 @@ class Matrix:
         """Checks if the matrix is not equal to another matrix"""
         return not (self.matrix == other.matrix)
 
-    def __add__(self, anotherObj):
+    def __add__(self, other):
         """Returns the sum of the matrices"""
-        if self.order() == anotherObj.order():
+        if self.order() == other.order():
             matrix = []
             for i in range(self.rows):
                 temp = []
                 for j in range(self.cols):
-                    temp.append(self.matrix[i][j] + anotherObj[i][j])
+                    temp.append(self.matrix[i][j] + other[i][j])
                 matrix.append(temp)
             return Matrix(matrix)
         raise ValueError("The 2 matrices do not have the same order.")
 
-    def __sub__(self, anotherObj):
+    def __iadd__(self, other):
+        return self + other
+
+    def __sub__(self, other):
         """Returns the difference of the matrices"""
-        if self.order() == anotherObj.order():
+        if self.order() == other.order():
             matrix = []
             for i in range(self.rows):
                 temp = []
                 for j in range(self.cols):
-                    temp.append(self.matrix[i][j] - anotherObj[i][j])
+                    temp.append(self.matrix[i][j] - other[i][j])
                 matrix.append(temp)
             return Matrix(matrix)
         raise ValueError("The 2 matrices do not have the same order.")
 
-    def __mul__(self, anotherObj):
+    def __isub__(self, other):
+        return self - other
+
+    def __mul__(self, other):
         """Returns the product of a matrix and a number/matrix"""
-        if isinstance(anotherObj, [int, float]):  # Scalar multiplication
-            prod = []
+        if isinstance(other, [int, float]):  # Scalar multiplication
+            result = []
             for row in self.matrix:
-                new_row = [(element * anotherObj) for element in row]
-                prod.append(new_row)
-            return Matrix(prod)
-        elif isinstance(anotherObj, Matrix):
-            matrix = []
-            for i in range(self.rows):
-                temp = []
-                for j in range(self.cols):
-                    temp.append(self.matrix[i][j] * anotherObj[i][j])
-                matrix.append(temp)
-            return matrix
+                new_row = [(element * other) for element in row]
+                result.append(new_row)
+            return Matrix(result)
+        elif isinstance(other, Matrix):
+            if self.cols == other.cols and self.rows == other.rows:
+                result = []
+                for i in range(self.rows):
+                    temp = []
+                    for j in range(self.cols):
+                        temp.append(self.matrix[i][j] * other[i][j])
+                    result.append(temp)
+                return result
+            raise ValueError("The 2 matrices do not have the same order.")
         raise TypeError(
-            f"Multiplication not supported between type Matrix and type {type(anotherObj)}."
+            f"Multiplication not supported between {type(self)} and {type(other)}."
         )
 
-    def __rmul__(self, otherObj):
-        """Returns the product of a matrix and a number/matrix"""
-        return self * otherObj
+    def __imul__(self, other):
+        return self * other
+
+    def __truediv__(self, other):
+        """Returns the division of a matrix and a number/matrix"""
+        if isinstance(other, (int, float)):
+            result = []
+            for row in self.matrix:
+                new_row = [(element * other) for element in row]
+                result.append(new_row)
+            return Matrix(result)
+        elif isinstance(other, Matrix):
+            if self.cols == other.cols and self.rows == other.rows:
+                result = []
+                for i in range(self.rows):
+                    temp = []
+                    for j in range(self.cols):
+                        temp.append(self.matrix[i][j] / other[i][j])
+                    result.append(temp)
+                return result
+            raise ValueError("The 2 matrices do not have the same order.")
+        raise TypeError(
+            f"Division not supported between {type(self)} and {type(other)}."
+        )
+
+    def __itruediv__(self, other):
+        return self / other
+
+    def __floordiv__(self, other):
+        """Returns the quotient of a matrix and a number/matrix"""
+        if isinstance(other, (int, float)):
+            result = []
+            for row in self.matrix:
+                new_row = [(element // other) for element in row]
+                result.append(new_row)
+            return Matrix(result)
+        elif isinstance(other, Matrix):
+            if self.cols == other.cols and self.rows == other.rows:
+                result = []
+                for i in range(self.rows):
+                    temp = []
+                    for j in range(self.cols):
+                        temp.append(self.matrix[i][j] // other[i][j])
+                    result.append(temp)
+                return result
+            raise ValueError("The 2 matrices do not have the same order.")
+        raise TypeError(
+            f"Multiplication not supported between {type(self)} and {type(other)}."
+        )
+
+    def __ifloordiv__(self, other):
+        return self // other
 
     def __matmul__(self, other):
         """Returns the cross product of two matrices"""
@@ -154,7 +211,7 @@ class Matrix:
             arr = []
             for i in range(self.rows):
                 arr.append([])
-                for j in range(other.rows):
+                for j in range(other.cols):
                     total = 0
                     for k in range(self.cols):
                         total += self.matrix[i][k] * other.matrix[k][j]
@@ -166,7 +223,7 @@ class Matrix:
         """Returns the matrix representing the n^th power of matrix A, if mathematically possible."""
         if self.cols == self.rows:
             if isinstance(power, int) and int > 0:
-                matrix = self.matrix
+                matrix = self.copy()
                 for _ in range(power - 1):
                     matrix = matrix * self.matrix
                 return matrix
@@ -176,12 +233,40 @@ class Matrix:
             raise ValueError("The power of the matrix must be a natural number")
         raise ValueError("The given matrix is not a square matrix.")
 
+    def identity(self, n: int = 3):
+        """
+        identity _summary_
+
+        Parameters
+        ----------
+        n : int
+            The order of the identity matrix. defaults to 3.
+        """
+        matrix = [[0] * n] * n
+        for i in range(n):
+            matrix[i][i] = 1
+        self.matrix = matrix
+        self.rows = n
+        self.cols = n
+
+    def zero(self, order: tuple):
+        r, c = order
+        self.matrix = [[0] * c] * r
+        self.rows = r
+        self.cols = c
+
+    def fill(self, value: int, order: tuple):
+        r, c = order
+        self.matrix = [[value] * c] * r
+        self.rows = r
+        self.cols = c
+
     def adjoint(self):
         """Returns the adjoint representation of the matrix.
 
         Returns
         -------
-        matrix :
+        Matrix :
             The adjoint representation of the matrix.
         """
         matrix = []
@@ -193,10 +278,10 @@ class Matrix:
         return Matrix(matrix).transpose()
 
     def cofactor(self, i: int, j: int):
-        """Returns the cofactor representation of the matrix.
+        """Returns the co-factor representation of the matrix.
 
-        Args
-        ----
+        Parameters
+        ----------
         i: int
             The index of the row of the matrix.
         j: int
@@ -204,8 +289,8 @@ class Matrix:
 
         Returns
         -------
-        cofactor: float
-            The cofactor representation of the matrix.
+        float :
+            The co-factor representation of the matrix.
         """
         return float((-1) ** (i + j) * self.minor(i, j))
 
@@ -226,8 +311,8 @@ class Matrix:
         """Returns a new matrix after removing the i th row and/or j th column.
         Will remove no row and column (by default).
 
-        Args
-        ----
+        Parameters
+        ----------
         i (int, optional)
             The row to be removed. Starts from 0.
         j (int, optional)
@@ -235,7 +320,7 @@ class Matrix:
 
         Returns
         -------
-        Matrix
+        Matrix :
             The matrix after removing the i th row and/or j th column.
 
         Raises
@@ -246,24 +331,20 @@ class Matrix:
         if i is None and j is None:
             matrix = self.copy()
             return Matrix(matrix)
-        elif all([i is not None, i >= 0, i < self.rows, j is None]):
+        elif i is not None and j is None:
             matrix = []
             for k in range(self.rows):
                 if k != i:
                     matrix.append(self.matrix[k])
             return Matrix(matrix)
-        elif all([j is not None, j >= 0, j < self.cols, i is None]):
+        elif i is None and j is not None:
             matrix = []
-            for k in range(self.rows):
-                temp = []
-                for l in range(self.cols):
-                    if l != j:
-                        temp.append(self.matrix[k][l])
-                matrix.append(temp)
+            for k in range(self.cols):
+                for l in range(self.rows):
+                    if k != j:
+                        matrix[l].append(self.matrix[l][k])
             return Matrix(matrix)
-        elif all(
-            [i is not None, j is not None, i >= 0, i < self.rows, j >= 0, j < self.cols]
-        ):
+        elif i is not None and j is not None:
             matrix = []
             for k in range(self.rows):
                 if k != i:
@@ -280,7 +361,7 @@ class Matrix:
 
         Returns
         -------
-        determinant : float
+        float :
             The determinant of this matrix.
         """
         if self.is_square():
@@ -303,7 +384,7 @@ class Matrix:
 
         Returns
         -------
-        inv : Matrix
+        Matrix :
             The inverse of this matrix
         """
         if self.is_square():
@@ -392,8 +473,8 @@ class Matrix:
     def minor(self, i, j):
         """Returns the minor of the Aij element in matrix A.
 
-        Args
-        ----
+        Parameters
+        ----------
         i (int, optional)
             The row of the element. Starts from 0.
         j (int, optional)
@@ -401,7 +482,7 @@ class Matrix:
 
         Returns
         -------
-        Matrix
+        Matrix :
             The minor of the matrix A.
 
         Raises
@@ -417,7 +498,7 @@ class Matrix:
 
         Returns
         -------
-        order: tuple
+        tuple :
             The order of the matrix.
         """
         return self.rows, self.cols
@@ -425,14 +506,13 @@ class Matrix:
     def rotate(self, turns=1):
         """Returns the matrix after n rotations.
 
-        Args
-        ----
+        Parameters
         turns (int, optional)
             The number of turns to rotate the matrix in clockwise direction. Defaults to 1.
 
         Returns
         -------
-        rotated: Matrix
+        Matrix :
             The matrix after n rotations.
         """
         if isinstance(turns, int):
@@ -455,7 +535,7 @@ class Matrix:
 
         Returns
         -------
-        total: int/float/complex
+        int/float/complex ;
             The trace of the matrix.
         """
         if self.is_square():
@@ -479,6 +559,16 @@ class Matrix:
             for j in range(self.rows):
                 arr[i].append(self.matrix[j][i])
         return Matrix(arr)
+
+    def to_list(self):
+        """Returns the matrix as a list of lists.
+
+        Returns
+        -------
+        list :
+            The matrix as a list of lists.
+        """
+        return self.matrix
 
     # Alias
     adj = adjoint

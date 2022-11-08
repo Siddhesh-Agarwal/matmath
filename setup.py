@@ -11,7 +11,7 @@ setup(
     license="MIT",
     url="https://github.com/Siddhesh-Agarwal/matmath",
     project_urls={
-        "Bug Tracker": "https://github.com/Siddhesh-Agarwal/matmath/issues"
+        "Bug Tracker": "https://github.com/Siddhesh-Agarwal/matmath/issues",
     },
     keywords=["matrix", "matrices", "vector", "vectors"],
     classifiers=[
