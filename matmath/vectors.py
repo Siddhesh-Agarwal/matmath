@@ -1,8 +1,10 @@
 from math import acos, cos, pi, sin, sqrt
+from typing import Union, List
 
 
 class Vector:
-    def __init__(self, *args):
+    def __init__(self, *args: List[Union[int, float]]):
+        __slots__ = "length", "__index"
         if len(args) == 0:
             self.vector = [0, 0]
         elif len(args) == 1:
@@ -90,7 +92,7 @@ class Vector:
         """Matrix multiplication (cross product) of two vectors"""
         return self.cross_product(other)
 
-    def __truediv__(self, number: float):
+    def __truediv__(self, number: Union[int, float]):
         """Divides the vector with the given number"""
         if isinstance(number, (int, float)):
             divided = [i / number for i in self]
@@ -148,7 +150,7 @@ class Vector:
             UnitVector.append(element / mod)
         return Vector(UnitVector)
 
-    def magnify(self, magnification: float = 1):
+    def magnify(self, magnification: Union[int, float] = 1):
         """Returns the scaled-up or scaled-down version of the vector
 
         Parameter
@@ -166,7 +168,7 @@ class Vector:
             NewVector.append(element * magnification)
         return Vector(NewVector)
 
-    def rotate(self, theta=pi, radians=True):
+    def rotate(self, theta: Union[int, float] = pi, radians: bool = True):
         """Rotates the given vector by the given angle in clockwise direction
 
         Parameters

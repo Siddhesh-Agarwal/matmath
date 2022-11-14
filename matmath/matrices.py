@@ -1,11 +1,13 @@
-def zero(n, m=None):
+from typing import List, Union, Sequence
+
+def zero(n: int, m: Union[int, None]=None):
     """Creates a 2D array of size n x m."""
     if m is None:
         m = n
     return [[0] * m] * n
 
 
-def identity(n):
+def identity(n: int):
     """Creates a 2D array of size n x m with 1s on the diagonal."""
     return [[int(i == j) for i in range(n)] for j in range(n)]
 

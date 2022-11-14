@@ -1,6 +1,28 @@
+[tool.poetry]
+name = "matmath"
+version = "3.0.1"
+description = "A simple and efficient module for matrix and vector manipulation."
+authors = ["Siddhesh Agarwal <siddhesh.agarwal@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+[tool.poetry.dev-dependencies]
+
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
-]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+matmath = "matmath:main"
+
+[tool.poetry.urls]
+"Source" = "https://github.com/Siddhesh-Agarwal/matmath"
+"Documentation" = "https://siddhesh-agarwal.github.io/matmath/"
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 88
