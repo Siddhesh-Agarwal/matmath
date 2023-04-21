@@ -2,7 +2,7 @@
 
 A simple and efficient module for matrix manipulation.
 
-[![Downloads](https://pepy.tech/badge/matmath)](https://pepy.tech/project/matmath)
+![Downloads](https://static.pepy.tech/personalized-badge/matmath?period=total&units=international_system&left_color=grey&right_color=green&left_text=Downloads)
 
 ---
 
