@@ -1,6 +1,7 @@
-from typing import List, Union, Sequence
+from typing import Optional
 
-def zero(n: int, m: Union[int, None]=None):
+
+def zero(n: int, m: Optional[int] = None):
     """Creates a 2D array of size n x m."""
     if m is None:
         m = n
@@ -31,9 +32,7 @@ class Matrix:
                 # Confirm that elements are numbers.
                 for element in iter_check:
                     if not isinstance(element, (int, float, complex)):
-                        raise ValueError(
-                            f"Matrix must contain only numbers not {type(element)}"
-                        )
+                        raise ValueError(f"Matrix must contain only numbers not {type(element)}")
         except TypeError:
             raise TypeError("Matrix argument should be iteratable.")
         # Check if number of elements in each row is the same.
@@ -42,9 +41,7 @@ class Matrix:
         for row in matrix:
             no_of_rows += 1
             if len(row) != no_of_cols:
-                raise ValueError(
-                    "The number of elements in the matrix should be equal."
-                )
+                raise ValueError("The number of elements in the matrix should be equal.")
         # Initialize variables
         self.matrix = [list(row) for row in matrix]
         self.rows = no_of_rows  # Number of rows
@@ -66,7 +63,7 @@ class Matrix:
             return self.matrix[self.__index - 1]
         raise StopIteration
 
-    def __getitem__(self, r, c):
+    def __getitem__(self, r: int, c: int):
         """Returns the element at the specified key"""
         return self.matrix[r][c]
 
@@ -150,9 +147,7 @@ class Matrix:
                     result.append(temp)
                 return result
             raise ValueError("The 2 matrices do not have the same order.")
-        raise TypeError(
-            f"Multiplication not supported between {type(self)} and {type(other)}."
-        )
+        raise TypeError(f"Multiplication not supported between {type(self)} and {type(other)}.")
 
     def __imul__(self, other):
         return self * other
@@ -175,9 +170,7 @@ class Matrix:
                     result.append(temp)
                 return result
             raise ValueError("The 2 matrices do not have the same order.")
-        raise TypeError(
-            f"Division not supported between {type(self)} and {type(other)}."
-        )
+        raise TypeError(f"Division not supported between {type(self)} and {type(other)}.")
 
     def __itruediv__(self, other):
         return self / other
@@ -200,9 +193,7 @@ class Matrix:
                     result.append(temp)
                 return result
             raise ValueError("The 2 matrices do not have the same order.")
-        raise TypeError(
-            f"Multiplication not supported between {type(self)} and {type(other)}."
-        )
+        raise TypeError(f"Multiplication not supported between {type(self)} and {type(other)}.")
 
     def __ifloordiv__(self, other):
         return self // other
@@ -221,7 +212,7 @@ class Matrix:
             return Matrix(arr)
         raise ValueError(f"Passed object is not of {type(self)}")
 
-    def __pow__(self, power=2):
+    def __pow__(self, power: int = 2):
         """Returns the matrix representing the n^th power of matrix A, if mathematically possible."""
         if self.cols == self.rows:
             if isinstance(power, int) and int > 0:
@@ -396,6 +387,7 @@ class Matrix:
             return (self.adjoint() / determinant).transpose()
         raise ValueError("The given matrix is not a square matrix.")
 
+    @staticmethod
     def is_diagonal(self):
         """Returns True if the matrix is diagonal, False otherwise."""
         if self.cols == self.rows:
@@ -406,6 +398,7 @@ class Matrix:
             return True
         return False
 
+    @staticmethod
     def is_identity(self):
         """Returns True if the matrix is identity, False otherwise"""
         for i in range(self.rows):
@@ -416,10 +409,12 @@ class Matrix:
                     return False
         return True
 
+    @staticmethod
     def is_invertible(self):
         """Returns True if the matrix is invertible, False otherwise."""
         return self.det() != 0
 
+    @staticmethod
     def is_lower_triangular(self):
         """Returns True if the matrix is lower triangular, False otherwise."""
         if self.cols == self.rows:
@@ -430,6 +425,7 @@ class Matrix:
             return True
         return False
 
+    @staticmethod
     def is_null(self):
         """Returns True if the matrix is null, False otherwise."""
         for row in self.matrix:
@@ -438,6 +434,7 @@ class Matrix:
                     return False
         return True
 
+    @staticmethod
     def is_skew_symmetric(self):
         """Returns True if the matrix is skew-symmetric, False otherwise."""
         if self.cols == self.rows:
@@ -448,10 +445,12 @@ class Matrix:
             return True
         return False
 
+    @staticmethod
     def is_square(self):
         """Returns True if the matrix is square, False otherwise."""
         return self.cols == self.rows
 
+    @staticmethod
     def is_symmetric(self):
         """Returns True if the matrix is symmetric, False otherwise."""
         if self.cols == self.rows:
@@ -462,6 +461,7 @@ class Matrix:
             return True
         return False
 
+    @staticmethod
     def is_upper_triangular(self):
         """Returns True if the matrix is upper triangular, False otherwise."""
         if self.cols == self.rows:
@@ -495,6 +495,7 @@ class Matrix:
         reduced = self.cut(i, j)
         return reduced.determinant()
 
+    @property
     def order(self):
         """Returns the order of the matrix.
 

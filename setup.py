@@ -1,13 +1,13 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="matmath",
-    version="v3.0.1",
+    version="v3.1.0",
     author="Siddhesh Agarwal",
-    author_email="siddhesh.agarwal@gmail.com",
     description="A simple and efficient module for matrix and vector manipulation.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
+    author_email="siddhesh.agarwal@gmail.com",
     license="MIT",
     url="https://github.com/Siddhesh-Agarwal/matmath",
     project_urls={

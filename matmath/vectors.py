@@ -1,5 +1,5 @@
 from math import acos, cos, pi, sin, sqrt
-from typing import Union, List
+from typing import List, Union
 
 
 class Vector:
@@ -80,9 +80,7 @@ class Vector:
             for elem1, elem2 in zip(self.vector, other.vector):
                 resultantVector.append(elem1 * elem2)
             return Vector(resultantVector)
-        raise TypeError(
-            f"Multiplication not supported between type Vector and type {type(other)}."
-        )
+        raise TypeError(f"Multiplication not supported between type Vector and type {type(other)}.")
 
     def __rmul__(self, other):
         """Returns the product of a number and a vector"""
@@ -110,7 +108,24 @@ class Vector:
         """Tells whether the vectors are not equal"""
         return not self.__eq__(other)
 
-    def modulus(self):
+    def __hash__(self):
+        """Returns the hash of the vector"""
+        return hash(tuple(self.vector))
+
+    def __bool__(self):
+        """Returns True if the vector is non-zero"""
+        return sum(map(lambda x: x * x, self.vector)) != 0
+
+    def __abs__(self):
+        """Returns the modulus of the vector"""
+        return self.modulus()
+
+    def copy(self):
+        """Returns a copy of the vector"""
+        return Vector(self.vector)
+
+    @staticmethod
+    def modulus(self) -> float:
         """Returns the modulus (length/magnitude) of the vector
 
         Returns
@@ -118,11 +133,10 @@ class Vector:
         float
             magnitude of the length of the vector.
         """
-        squared = 0
-        for i in self:
-            squared += i**2
-        return sqrt(squared)
+        sum_of_squares = sum(map(lambda x: x * x, self.vector))
+        return sqrt(sum_of_squares)
 
+    @staticmethod
     def argument(self):
         """Returns the argument of the vector
 
@@ -253,11 +267,10 @@ class Vector:
                 a1, a2 = self
                 b1, b2 = other
                 return Vector([0, 0, a1 * b2 - a2 * b1])
-            raise ValueError(
-                "The dimension of the 2 vectors must be less than or equal to 3."
-            )
+            raise ValueError("The dimension of the 2 vectors must be less than or equal to 3.")
         raise ValueError("The dimension of the 2 vectors must be the same.")
 
+    @staticmethod
     def is_unit(self):
         """Tells whether the vector is a unit vector or not"""
         sum_of_squares = 0
@@ -267,6 +280,7 @@ class Vector:
                 return False
         return sum_of_squares == 1
 
+    @staticmethod
     def is_parallel(self, other):
         """Tells whether the vectors are parallel or not"""
         ratio = self[0] / other[0]
@@ -274,6 +288,21 @@ class Vector:
             if i / j != ratio:
                 return False
         return True
+
+    @staticmethod
+    def is_orthogonal(self, other):
+        """Tells whether the vectors are orthogonal or not"""
+        return self.dot_product(other) == 0
+
+    @staticmethod
+    def to_list(self):
+        """Returns the vector as a list"""
+        return self.vector
+
+    @staticmethod
+    def to_tuple(self):
+        """Returns the vector as a tuple"""
+        return tuple(self.vector)
 
     # Alias
     arg = argument
