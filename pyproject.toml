@@ -7,6 +7,9 @@ license = "MIT"
 repository = "https://github.com/Siddhesh-Agarwal/matmath"
 readme = "README.md"
 keywords = ["matrix", "vector", "math", "linear algebra", "algebra", "matmath"]
+packages = [
+    { include = "matmath"},
+]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",

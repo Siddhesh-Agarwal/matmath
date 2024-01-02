@@ -66,3 +66,15 @@ Now you can use:
 instead of importing like this:
 
     from matmath.matmath import Matrix, Vector
+
+
+## 2 January 2024 - v.3.2.0
+
+- Completely moved away from [twine](https://twine.readthedocs.io/en/stable/) in favour of [poetry](https://python-poetry.org/).
+- Rename `__pow__` method to `pow` in `Vector` class.
+- Type hints added to all methods of both `Matrix` and `Vector` classes.
+- Refactored multiple methods across both classes to improve time/space complexity.
+- Added better type checking to `__init__` method of `Matrix` class.
+- Better support for `__matmul__` method in `Vector` and `Matrix` classes.
+
+NOTE: Python 3.6 and 3.7 are still supported even though they have reached [EOL](https://endoflife.date/python).
