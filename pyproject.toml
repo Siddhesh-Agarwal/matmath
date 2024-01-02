@@ -4,25 +4,37 @@ version = "3.1.0"
 description = "A simple and efficient module for matrix and vector manipulation."
 authors = ["Siddhesh Agarwal <siddhesh.agarwal@gmail.com>"]
 license = "MIT"
+repository = "https://github.com/Siddhesh-Agarwal/matmath"
+readme = "README.md"
+keywords = ["matrix", "vector", "math", "linear algebra", "algebra", "matmath"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+
+]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = ">=3.6,<4.0"
 
-[tool.poetry.dev-dependencies]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
-matmath = "matmath:main"
-
-[tool.poetry.urls]
-"Source" = "https://github.com/Siddhesh-Agarwal/matmath"
-"Documentation" = "https://siddhesh-agarwal.github.io/matmath/"
-
-[tool.isort]
-profile = "black"
-
-[tool.black]
-line-length = 100
