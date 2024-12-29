@@ -1,72 +1,63 @@
 """A module to represent vectors in n-dimensional space."""
+
 from math import acos, cos, pi, sin, sqrt
 from typing import Any, List, Tuple, Union
+
+number = Union[int, float]
 
 
 class Vector:
     """A class to represent a vector in n-dimensional space."""
 
-    def __init__(self, *args: List[Union[int, float]]):
-        self.vector: List[Union[int, float]] = [0, 0]
+    def __init__(self, *args: List[number]):
+        self.vector: List[number] = [0, 0]
         if len(args) == 1:
             self.vector = args[0]
         elif len(args) > 1:
             raise TypeError("Vector() takes at most 1 argument.")
         self.length = len(self.vector)
-        self.__index = 0
 
-    def __iter__(self):
-        """Makes the vector iterable"""
-        return self.vector
-
-    def __next__(self):
-        """Returns the next iterator of the vector"""
-        if self.__index < len(self.vector):
-            self.__index += 1
-            return self.vector[self.__index - 1]
-        raise StopIteration
-
-    def __len__(self):
+    def __len__(self) -> int:
         """returns the number of elements in the vector"""
         return self.length
 
-    def __getitem__(self, key: int):
+    def __getitem__(self, key: int) -> int | float:
         """Returns the element at key in the vector"""
         return self.vector[key]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Returns a string construction of the vector"""
         return f"Vector({ str(self.vector)[1:-1] })"
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Returns a string representation of the vector"""
         return "<" + str(self.vector)[1:-1] + ">"
 
-    def __add__(self, other: "Vector"):
+    def __add__(self, other: "Vector") -> "Vector":
         """Adds 2 vectors of the same dimension"""
         if not isinstance(other, self.__class__):
             raise ValueError("The second argument must be a vector.")
         if self.length == len(other.vector):
-            result_vector: List[Union[int, float]] = []
+            result_vector: List[number] = []
             for elem1, elem2 in zip(self.vector, other.vector):
                 result_vector.append(elem1 + elem2)
             return Vector(result_vector)
         raise TypeError("The dimension of the 2 vectors must be the same.")
 
-    def __sub__(self, other: "Vector"):
+    def __sub__(self, other: "Vector") -> "Vector":
         """Subtracts 2 vectors of the same dimension"""
         if not isinstance(other, self.__class__):
             raise ValueError("The second argument must be a vector.")
         if self.length == len(other.vector):
-            result_vector: List[Union[int, float]] = []
+            result_vector: List[number] = []
             for elem1, elem2 in zip(self.vector, other.vector):
                 result_vector.append(elem1 - elem2)
             return Vector(result_vector)
         raise TypeError("The dimension of the 2 vectors must be the same.")
 
-    def __mul__(self, other: Union[int, float, "Vector"]):
+    def __mul__(self, other: Union[int, float, "Vector"]) -> "Vector":
         """Returns the product of vector and a number"""
-        result_vector: List[Union[int, float]] = []
+        result_vector: List[number] = []
         if isinstance(other, (int, float)):
             for i in range(self.length):
                 result_vector.append(self.vector[i] * other)
@@ -77,15 +68,15 @@ class Vector:
             return Vector(result_vector)
         raise TypeError("The second argument must be a number or a vector.")
 
-    def __rmul__(self, other: Union[int, float]):
+    def __rmul__(self, other: number) -> "Vector":
         """Returns the product of a number and a vector"""
         return self * other
 
-    def __matmul__(self, other: "Vector"):
+    def __matmul__(self, other: "Vector") -> "Vector":
         """Matrix multiplication (cross product) of two vectors"""
         return self.cross_product(other)
 
-    def __truediv__(self, other: Union[int, float, "Vector"]):
+    def __truediv__(self, other: Union[int, float, "Vector"]) -> "Vector":
         """Divides the vector with the given number"""
         if isinstance(other, (int, float)):
             result_vector = [i / other for i in self.vector]
@@ -97,29 +88,29 @@ class Vector:
             return Vector(result_vector)
         raise TypeError("The second argument must be a number or a vector.")
 
-    def __eq__(self, other: Any):
+    def __eq__(self, other: Any) -> bool:
         """Tells whether the vectors are equal or not"""
         if not isinstance(other, self.__class__):
             return False
         return self.vector == other.vector
 
-    def __ne__(self, other: Any):
+    def __ne__(self, other: Any) -> bool:
         """Tells whether the vectors are not equal"""
         return not self.__eq__(other)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         """Returns the hash of the vector"""
         return hash(tuple(self.vector))
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         """Returns True if the vector is non-zero"""
         return not all(self.vector)
 
-    def __abs__(self):
+    def __abs__(self) -> float:
         """Returns the modulus of the vector"""
         return self.modulus()
 
-    def copy(self):
+    def copy(self) -> "Vector":
         """Returns a copy of the vector"""
         return Vector(self.vector)
 
@@ -134,7 +125,7 @@ class Vector:
         sum_of_squares = sum(map(lambda x: x * x, self.vector))
         return sqrt(sum_of_squares)
 
-    def argument(self):
+    def argument(self) -> "Vector":
         """Returns the argument of the given vector
 
         Returns
@@ -145,7 +136,7 @@ class Vector:
         norm = self.modulus()
         return Vector(list(map(lambda x: acos(x / norm), self.vector)))
 
-    def unit_vector(self):
+    def unit_vector(self) -> "Vector":
         """Returns the unit vector of the given vector
 
         Returns
@@ -159,7 +150,7 @@ class Vector:
         unit_vector = [ele / mod for ele in self.vector]
         return Vector(unit_vector)
 
-    def magnify(self, magnification: Union[int, float] = 1):
+    def magnify(self, magnification: number = 1) -> "Vector":
         """Returns the scaled-up or scaled-down version of the vector
 
         Parameter
@@ -175,7 +166,7 @@ class Vector:
         new_vector = [ele * magnification for ele in self.vector]
         return Vector(new_vector)
 
-    def rotate(self, theta: Union[int, float] = pi, radians: bool = True):
+    def rotate(self, theta: number = pi, radians: bool = True) -> "Vector":
         """Rotates the given vector by the given angle in clockwise direction
 
         Parameters
@@ -206,7 +197,7 @@ class Vector:
             return Vector(rotated)
         raise ValueError("The dimension of the vector must be equal to 2.")
 
-    def dot_product(self, other: "Vector"):
+    def dot_product(self, other: "Vector") -> number:
         """The dot product of two vectors, if possible
 
         Parameters
@@ -231,7 +222,7 @@ class Vector:
             return dotproduct
         raise ValueError("The dimension of the 2 vectors must be the same.")
 
-    def cross_product(self, other: "Vector"):
+    def cross_product(self, other: "Vector") -> "Vector":
         """Returns the cross product of 2 vectors
 
         Parameters
@@ -286,11 +277,11 @@ class Vector:
         """Tells whether the vectors are orthogonal or not"""
         return self.dot_product(other) == 0
 
-    def to_list(self) -> List[Union[int, float]]:
+    def to_list(self) -> List[number]:
         """Returns the vector as a list"""
         return self.vector
 
-    def to_tuple(self) -> Tuple[int | float, ...]:
+    def to_tuple(self) -> Tuple[number, ...]:
         """Returns the vector as a tuple"""
         return tuple(self.vector)
 

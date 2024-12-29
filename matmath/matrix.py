@@ -1,12 +1,16 @@
 """A module for matrix operations."""
-from typing import Any, List, Tuple, Union
+
+from typing import Any, Iterator, List, Tuple, Union
+
+
+number = Union[int, float]
 
 
 class Matrix:
     """A class to represent a matrix."""
 
-    def __init__(self, mat: List[List[Union[int, float]]]):
-        self.matrix: List[List[Union[int, float]]] = []
+    def __init__(self, mat: List[List[number]]):
+        self.matrix: List[List[number]] = []
         self.rows: int = 0
         self.cols: int = 0
         self.rows = len(self.matrix)
@@ -16,25 +20,16 @@ class Matrix:
                 raise ValueError("The matrix is not a proper matrix.")
             mat[i] = list(row)
         self.matrix = list(mat)
-        # Initialize variables
-        self.__index = 0  # Used for iterating over the matrix
 
-    def __len__(self):
-        """Returns the Union[int, float] of rows in the matrix"""
+    def __len__(self) -> int:
+        """Returns the number of rows in the matrix"""
         return self.rows
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[List[number]]:
         """Returns an iterator over the elements of the matrix"""
         return iter(self.matrix)
 
-    def __next__(self):
-        """Returns the next element of the matrix"""
-        if self.__index < len(self.matrix):
-            self.__index += 1
-            return self.matrix[self.__index - 1]
-        raise StopIteration
-
-    def __getitem__(self, r: int):
+    def __getitem__(self, r: int) -> List[number]:
         """Returns the element at the specified key"""
         return self.matrix[r]
 
@@ -54,37 +49,34 @@ class Matrix:
                 string[j] += temp[j] + " " * (helper - len(temp[j]) + 1)
         return "|\n".join(string) + "|"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         sep = ",\n" + " " * 7
         return f"Matrix({sep.join(list(map(lambda x: str(x)[1:-1], self.matrix)))})"
 
-    def __eq__(self, other: Any):
+    def __eq__(self, other: Any) -> bool:
         """Checks if the matrix is equal to another matrix"""
         if not isinstance(other, self.__class__):
             return False
         return self.matrix == other.matrix
 
-    def __ne__(self, other: Any):
+    def __ne__(self, other: Any) -> bool:
         """Checks if the matrix is not equal to another matrix"""
-        return not self == other
+        return not (self == other)
 
-    def __add__(self, other: "Matrix"):
+    def __add__(self, other: "Matrix") -> "Matrix":
         """Returns the sum of the matrices"""
         if self.order == other.order:
-            matrix: List[List[Union[int, float]]] = []
+            matrix: List[List[number]] = []
             for i in range(self.rows):
                 temp = [self.matrix[i][j] + other[i][j] for j in range(self.cols)]
                 matrix.append(temp)
             return Matrix(matrix)
         raise ValueError("The 2 matrices do not have the same order.")
 
-    def __iadd__(self, other: "Matrix"):
-        return self + other
-
-    def __sub__(self, other: "Matrix"):
+    def __sub__(self, other: "Matrix") -> "Matrix":
         """Returns the difference of the matrices"""
         if self.order == other.order:
-            matrix: List[List[Union[int, float]]] = []
+            matrix: List[List[number]] = []
             for i in range(self.rows):
                 matrix.append(
                     [self.matrix[i][j] - other[i][j] for j in range(self.cols)]
@@ -92,17 +84,14 @@ class Matrix:
             return Matrix(matrix)
         raise ValueError("The 2 matrices do not have the same order.")
 
-    def __isub__(self, other: "Matrix"):
-        return self - other
-
-    def __mul__(self, other: Union["Matrix", int, float]):
-        """Returns the product of a matrix and a Union[int, float]/matrix"""
+    def __mul__(self, other: Union["Matrix", int, float]) -> "Matrix":
+        """Returns the product of a matrix and a number/matrix"""
         if isinstance(other, (int, float)):  # Scalar multiplication
             result = [[(element * other) for element in row] for row in self.matrix]
             return Matrix(result)
         if isinstance(other, self.__class__):
             if self.cols == other.cols and self.rows == other.rows:
-                result: List[List[Union[int, float]]] = []
+                result: List[List[number]] = []
                 for i in range(self.rows):
                     temp = [self.matrix[i][j] * other[i][j] for j in range(self.cols)]
                     result.append(temp)
@@ -112,20 +101,22 @@ class Matrix:
             f"Multiplication not supported between {type(self)} and {type(other)}."
         )
 
-    def __imul__(self, other: Union["Matrix", int, float]):
-        return self * other
-
-    def __truediv__(self, other: Union["Matrix", int, float]):
-        """Returns the division of a matrix and a Union[int, float]/matrix"""
+    def __imul__(self, other: Union["Matrix", int, float]) -> "Matrix":
         if isinstance(other, (int, float)):
-            result: List[List[Union[int, float]]] = []
+            return self * other
+        return other * self
+
+    def __truediv__(self, other: Union["Matrix", int, float]) -> "Matrix":
+        """Returns the division of a matrix and a number/matrix"""
+        if isinstance(other, (int, float)):
+            result: List[List[number]] = []
             for row in self.matrix:
                 new_row = [(element * other) for element in row]
                 result.append(new_row)
             return Matrix(result)
         if isinstance(other, self.__class__):
             if self.cols == other.cols and self.rows == other.rows:
-                result: List[List[Union[int, float]]] = []
+                result: List[List[number]] = []
                 for i in range(self.rows):
                     temp = [self.matrix[i][j] / other[i][j] for j in range(self.cols)]
                     result.append(temp)
@@ -135,13 +126,10 @@ class Matrix:
             f"Division not supported between {type(self)} and {type(other)}."
         )
 
-    def __itruediv__(self, other: Union["Matrix", int, float]):
-        return self / other
-
-    def __floordiv__(self, other: Union["Matrix", int, float]):
-        """Returns the quotient of a matrix and a Union[int, float]/matrix"""
+    def __floordiv__(self, other: Union["Matrix", int, float]) -> "Matrix":
+        """Returns the quotient of a matrix and a number/matrix"""
         if isinstance(other, (int, float)):
-            result: List[List[Union[int, float]]] = []
+            result: List[List[number]] = []
             for row in self.matrix:
                 new_row = [(element // other) for element in row]
                 result.append(new_row)
@@ -158,21 +146,18 @@ class Matrix:
             f"Multiplication not supported between {type(self)} and {type(other)}."
         )
 
-    def __ifloordiv__(self, other: Union["Matrix", int, float]):
-        return self // other
-
     def __matmul__(self, other: "Matrix"):
         """Returns the cross product of two matrices"""
         if not isinstance(other, self.__class__):
             raise ValueError(f"Passed object is not of {type(self)}")
-        arr: list[list[Union[int, float]]] = [[0] * other.cols] * self.rows
+        arr: list[list[number]] = [[0] * other.cols] * self.rows
         for i in range(self.rows):
             for j in range(other.cols):
                 for k in range(other.rows):
                     arr[i][j] += self.matrix[i][k] * other.matrix[k][j]
         return Matrix(arr)
 
-    def pow(self, power: int = 2):
+    def pow(self, power: int = 2) -> "Matrix":
         """Returns the n^th power of the matrix, if mathematically possible."""
         if self.cols == self.rows:
             if power > 0:
@@ -182,12 +167,10 @@ class Matrix:
                 return matrix
             elif power == 0:
                 return self.identity(self.rows)
-            raise ValueError(
-                "The power of the matrix must be a natural Union[int, float]"
-            )
+            raise ValueError("The power of the matrix must be a natural number")
         raise ValueError("The given matrix is not a square matrix.")
 
-    def identity(self, n: int = 3):
+    def identity(self, n: int = 3) -> "Matrix":
         """
         identity _summary_
 
@@ -196,26 +179,26 @@ class Matrix:
         n : int
             The order of the identity matrix. defaults to 3.
         """
-        matrix: List[List[Union[int, float]]] = [[0] * n] * n
+        matrix: List[List[number]] = [[0] * n] * n
         for i in range(n):
             matrix[i][i] = 1
         return Matrix(matrix)
 
-    def zero(self, order: Tuple[int, int]):
+    def zero(self, order: Tuple[int, int]) -> "Matrix":
         """Returns a zero matrix of the given order."""
 
         r, c = order
-        matrix: List[List[Union[int, float]]] = [[0] * c] * r
+        matrix: List[List[number]] = [[0] * c] * r
         return Matrix(matrix)
 
-    def fill(self, value: int, order: Tuple[int, int]):
+    def fill(self, value: int, order: Tuple[int, int]) -> "Matrix":
         """Returns a matrix of the given order filled with the given value."""
 
         r, c = order
         self.matrix = [[value] * c] * r
         return Matrix(self.matrix)
 
-    def adjoint(self):
+    def adjoint(self) -> "Matrix":
         """Returns the adjoint representation of the matrix.
 
         Returns
@@ -223,7 +206,7 @@ class Matrix:
         Matrix :
             The adjoint representation of the matrix.
         """
-        matrix: List[List[Union[int, float]]] = []
+        matrix: List[List[number]] = []
         for i in range(self.rows):
             temp = [self.cofactor(i, j) for j in range(self.cols)]
             matrix.append(temp)
@@ -246,7 +229,7 @@ class Matrix:
         """
         return float((-1) ** (i + j) * self.minor(i, j))
 
-    def copy(self):
+    def copy(self) -> "Matrix":
         """Returns a shallow copy of this matrix.
 
         Returns
@@ -256,7 +239,7 @@ class Matrix:
         new_matrix = self.matrix.copy()
         return Matrix(new_matrix)
 
-    def cut(self, i: Union[int, None] = None, j: Union[int, None] = None):
+    def cut(self, i: Union[int, None] = None, j: Union[int, None] = None) -> "Matrix":
         """Returns a new matrix after removing the i th row and/or j th column.
         Will remove no row and column (by default).
 
@@ -275,11 +258,11 @@ class Matrix:
         Raises
         ------
         ValueError
-            Raised if the row or column to be removed is not a natural Union[int, float].
+            Raised if the row or column to be removed is not a natural number.
         """
         if i is None and j is None:
             return self.copy()
-        matrix: List[List[Union[int, float]]] = []
+        matrix: List[List[number]] = []
         if i is not None:
             if i < 0 or i >= self.rows:
                 raise ValueError("The row to be removed is not present in the matrix.")
@@ -295,7 +278,7 @@ class Matrix:
                 matrix[i] = row[:j] + row[j + 1 :]
         return Matrix(matrix)
 
-    def determinant(self):
+    def determinant(self) -> number:
         """Returns the determinant of this matrix.
 
         Returns
@@ -318,7 +301,7 @@ class Matrix:
             return determinant
         raise ValueError("The given matrix is not a square matrix.")
 
-    def inverse(self):
+    def inverse(self) -> "Matrix":
         """Returns the inverse of this matrix
 
         Returns
@@ -402,7 +385,7 @@ class Matrix:
                     return False
         return True
 
-    def minor(self, i: int = 0, j: int = 0):
+    def minor(self, i: int = 0, j: int = 0) -> number:
         """Returns the minor of the Aij element in matrix A.
 
         Parameters
@@ -420,7 +403,7 @@ class Matrix:
         Raises
         ------
         ValueError
-            Raised if the row or column to be removed is not a natural Union[int, float].
+            Raised if the row or column to be removed is not a natural number.
         """
         reduced = self.cut(i, j)
         return reduced.determinant()
@@ -436,12 +419,12 @@ class Matrix:
         """
         return self.rows, self.cols
 
-    def rotate(self, turns: int = 1):
+    def rotate(self, turns: int = 1) -> "Matrix":
         """Returns the matrix after n rotations.
 
         Parameters
         turns (int, optional)
-            The Union[int, float] of turns to rotate the matrix in clockwise direction.
+            The number of turns to rotate the matrix in clockwise direction.
             Defaults to 1.
 
         Returns
@@ -461,14 +444,14 @@ class Matrix:
                 rotated = self.__rotate(rotated)
             return Matrix(rotated)
 
-    def __rotate(self, mat: List[List[Union[int, float]]]):
-        rotated: List[List[Union[int, float]]] = [[0] * len(mat)] * len(mat[0])
+    def __rotate(self, mat: List[List[number]]):
+        rotated: List[List[number]] = [[0] * len(mat)] * len(mat[0])
         for i, row in enumerate(mat):
             for j, element in enumerate(row):
                 rotated[j][len(mat) - i - 1] = element
         return rotated
 
-    def trace(self):
+    def trace(self) -> number:
         """Returns a trace of the matrix.
 
         Returns
@@ -483,7 +466,7 @@ class Matrix:
             return total
         raise ValueError("The given matrix is not a square matrix.")
 
-    def transpose(self):
+    def transpose(self) -> "Matrix":
         """Transposes the given matrix.
 
         Returns
@@ -494,7 +477,7 @@ class Matrix:
         arr = [[self.matrix[j][i] for j in range(self.rows)] for i in range(self.cols)]
         return Matrix(arr)
 
-    def to_list(self):
+    def to_list(self) -> List[List[number]]:
         """Returns the matrix as a list of lists.
 
         Returns
@@ -511,3 +494,4 @@ class Matrix:
     is_diagonal_dominant = is_diagonal
     is_upper_hessenberg = is_upper_triangular
     is_lower_hessenberg = is_lower_triangular
+    size = order
