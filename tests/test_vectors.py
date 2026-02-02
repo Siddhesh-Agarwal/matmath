@@ -7,28 +7,33 @@ class TestVector(unittest.TestCase):
     # Ways to create a Vector
     def test_vector_1(self):
         vec = Vector()  # defaults to <0, 0>
-        self.assertEqual(vec, Vector(0, 0))
+        self.assertEqual(vec, Vector([0, 0]))
 
     def test_vector_2(self):
-        vec1 = Vector(1, 2, 3)
+        vec1 = Vector([1, 2, 3])
         vec2 = Vector([1, 2, 3])
         self.assertEqual(vec1, vec2)
 
+    def test_vector_3(self):
+        vec1 = Vector([1, 2, 3])
+        vec2 = Vector([1, 2])
+        self.assertNotEqual(vec1, vec2)
+
     # Check that the declaration fails when a non-number argument is passed
-    def failed_declaration_1(self):
-        with self.assertRaises(ValueError):
-            vec = Vector(1, "a", 2)
+    def test_failed_declaration_1(self):
+        with self.assertRaises(TypeError):
+            Vector(1, 2, 3)  # pyrefly: ignore
 
-    def failed_declaration_2(self):
+    def test_failed_declaration_2(self):
         with self.assertRaises(ValueError):
-            vec = Vector([1, "a", 2])
+            Vector([1, 2, 3, "a"])  # pyrefly: ignore
 
-    def failed_declaration_3(self):
-        with self.assertRaises(ValueError):
-            vec = Vector(1, 2, [1, 2, 3])
+    def test_failed_declaration_3(self):
+        with self.assertRaises(TypeError):
+            Vector(1, 2, [1, 2, 3])  # pyrefly: ignore
 
     def test_getitem(self):
-        vec = Vector(1, 2, 3)
+        vec = Vector([1, 2, 3])
         # positive indexing
         self.assertEqual(vec[0], 1)
         self.assertEqual(vec[1], 2)
@@ -40,15 +45,15 @@ class TestVector(unittest.TestCase):
 
     # Test support for built-in functions
     def test_len(self):
-        vec = Vector(1, 2, 3)
+        vec = Vector([1, 2, 3])
         self.assertEqual(len(vec), 3)
 
     def test_str(self):
-        vec = Vector(1, 2, 3)
+        vec = Vector([1, 2, 3])
         self.assertEqual(str(vec), "<1, 2, 3>")
 
     def test_repr_1(self):
-        vec = Vector(1, 2, 3)
+        vec = Vector([1, 2, 3])
         self.assertEqual(repr(vec), "Vector(1, 2, 3)")
 
     def test_repr_2(self):
@@ -57,48 +62,50 @@ class TestVector(unittest.TestCase):
 
     # Test support for math operations
     def test_add(self):
-        vec1 = Vector(1, 2, 3)
-        vec2 = Vector(4, 5, 6)
-        self.assertEqual(vec1 + vec2, Vector(5, 7, 9))
+        vec1 = Vector([1, 2, 3])
+        vec2 = Vector([4, 5, 6])
+        self.assertEqual(vec1 + vec2, Vector([5, 7, 9]))
 
     def test_sub(self):
-        vec1 = Vector(1, 2, 3)
-        vec2 = Vector(4, 5, 6)
-        self.assertEqual(vec1 - vec2, Vector(-3, -3, -3))
+        vec1 = Vector([1, 2, 3])
+        vec2 = Vector([4, 5, 6])
+        self.assertEqual(vec1 - vec2, Vector([-3, -3, -3]))
 
     def test_mul(self):
-        vec1 = Vector(1, 2, 3)
-        vec2 = Vector(4, 5, 6)
-        self.assertEqual(vec1 * vec2, Vector(4, 10, 18))
+        vec1 = Vector([1, 2, 3])
+        vec2 = Vector([4, 5, 6])
+        self.assertEqual(vec1 * vec2, Vector([4, 10, 18]))
 
     def test_div(self):
-        vec1 = Vector(2, 4, 6)
-        self.assertEqual(vec1 / 2, Vector(1, 2, 3))
+        vec1 = Vector([2, 4, 6])
+        self.assertEqual(vec1 / 2, Vector([1, 2, 3]))
 
     def test_matmul(self):
-        vec1 = Vector(1, 2, 3)
-        vec2 = Vector(4, 5, 6)
-        self.assertEqual(vec1 @ vec2, Vector(-3, 6, -3))
+        vec1 = Vector([1, 2, 3])
+        vec2 = Vector([4, 5, 6])
+        # Note: @ is cross product in this library
+        # Cross product of [1,2,3] and [4,5,6] is [-3, 6, -3]
+        self.assertEqual(vec1 @ vec2, Vector([-3, 6, -3]))
 
     def test_eq(self):
-        vec1 = Vector(1, 2, 3)
-        vec2 = Vector(1, 2, 3)
+        vec1 = Vector([1, 2, 3])
+        vec2 = Vector([1, 2, 3])
         self.assertTrue(vec1 == vec2)
 
     def test_ne(self):
-        vec1 = Vector(1, 2, 3)
-        vec2 = Vector(1, 2, 3)
+        vec1 = Vector([1, 2, 3])
+        vec2 = Vector([1, 2, 3])
         self.assertFalse(vec1 != vec2)
 
     # Test component retrieval
     def test_component_retrieval(self):
-        vec1 = Vector(1, 2, 3)
+        vec1 = Vector([1, 2, 3])
         self.assertEqual(vec1[0], 1)
         self.assertEqual(vec1[1], 2)
         self.assertEqual(vec1[2], 3)
 
     def test_modulus(self):
-        vec1 = Vector(2, 3, 6)
+        vec1 = Vector([2, 3, 6])
         self.assertEqual(vec1.modulus(), 7)
 
 

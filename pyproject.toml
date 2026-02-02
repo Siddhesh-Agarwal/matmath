@@ -35,9 +35,21 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.6,<4.0"
+python = ">=3.8,<4.0"
+
+[tool.pyrefly]
+project-includes = [
+    "**/*.py*",
+    "**/*.ipynb",
+]
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "pyrefly (>=0.50.1,<0.51.0)",
+    "ruff (>=0.14.14,<0.15.0)"
+]

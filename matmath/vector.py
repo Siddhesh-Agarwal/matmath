@@ -1,33 +1,35 @@
 """A module to represent vectors in n-dimensional space."""
 
 from math import acos, cos, pi, sin, sqrt
-from typing import Any, List, Tuple, Union
-
-number = Union[int, float]
+from typing import Any, List, Optional, Union
 
 
 class Vector:
     """A class to represent a vector in n-dimensional space."""
 
-    def __init__(self, *args: List[number]):
-        self.vector: List[number] = [0, 0]
-        if len(args) == 1:
-            self.vector = args[0]
-        elif len(args) > 1:
-            raise TypeError("Vector() takes at most 1 argument.")
-        self.length = len(self.vector)
+    vector: List[float]
+    length: int
+
+    def __init__(self, arr: Optional[List[float]] = None):
+        if arr is None:
+            arr = [0, 0]
+        for i in arr:
+            if not isinstance(i, (int, float)):
+                raise TypeError("All elements of the vector must be `int` or `float`.")
+        self.vector = arr
+        self.length = len(arr)
 
     def __len__(self) -> int:
         """returns the number of elements in the vector"""
         return self.length
 
-    def __getitem__(self, key: int) -> int | float:
+    def __getitem__(self, key: int) -> float:
         """Returns the element at key in the vector"""
         return self.vector[key]
 
     def __repr__(self) -> str:
         """Returns a string construction of the vector"""
-        return f"Vector({ str(self.vector)[1:-1] })"
+        return f"Vector({str(self.vector)[1:-1]})"
 
     def __str__(self) -> str:
         """Returns a string representation of the vector"""
@@ -38,10 +40,8 @@ class Vector:
         if not isinstance(other, self.__class__):
             raise ValueError("The second argument must be a vector.")
         if self.length == len(other.vector):
-            result_vector: List[number] = []
-            for elem1, elem2 in zip(self.vector, other.vector):
-                result_vector.append(elem1 + elem2)
-            return Vector(result_vector)
+            result = [i + j for i, j in zip(self.vector, other.vector)]
+            return Vector(result)
         raise TypeError("The dimension of the 2 vectors must be the same.")
 
     def __sub__(self, other: "Vector") -> "Vector":
@@ -49,26 +49,21 @@ class Vector:
         if not isinstance(other, self.__class__):
             raise ValueError("The second argument must be a vector.")
         if self.length == len(other.vector):
-            result_vector: List[number] = []
-            for elem1, elem2 in zip(self.vector, other.vector):
-                result_vector.append(elem1 - elem2)
-            return Vector(result_vector)
+            result = [i - j for i, j in zip(self.vector, other.vector)]
+            return Vector(result)
         raise TypeError("The dimension of the 2 vectors must be the same.")
 
     def __mul__(self, other: Union[int, float, "Vector"]) -> "Vector":
         """Returns the product of vector and a number"""
-        result_vector: List[number] = []
         if isinstance(other, (int, float)):
-            for i in range(self.length):
-                result_vector.append(self.vector[i] * other)
-            return Vector(result_vector)
+            result = [i * other for i in self.vector]
+            return Vector(result)
         if isinstance(other, self.__class__):
-            for elem1, elem2 in zip(self.vector, other.vector):
-                result_vector.append(elem1 * elem2)
-            return Vector(result_vector)
+            result = [i * j for i, j in zip(self.vector, other.vector)]
+            return Vector(result)
         raise TypeError("The second argument must be a number or a vector.")
 
-    def __rmul__(self, other: number) -> "Vector":
+    def __rmul__(self, other: float) -> "Vector":
         """Returns the product of a number and a vector"""
         return self * other
 
@@ -79,20 +74,16 @@ class Vector:
     def __truediv__(self, other: Union[int, float, "Vector"]) -> "Vector":
         """Divides the vector with the given number"""
         if isinstance(other, (int, float)):
-            result_vector = [i / other for i in self.vector]
-            return Vector(result_vector)
+            result = [i / other for i in self.vector]
+            return Vector(result)
         if isinstance(other, self.__class__):
-            result_vector = [
-                elem1 / elem2 for elem1, elem2 in zip(self.vector, other.vector)
-            ]
-            return Vector(result_vector)
+            result = [i / j for i, j in zip(self.vector, other.vector)]
+            return Vector(result)
         raise TypeError("The second argument must be a number or a vector.")
 
     def __eq__(self, other: Any) -> bool:
         """Tells whether the vectors are equal or not"""
-        if not isinstance(other, self.__class__):
-            return False
-        return self.vector == other.vector
+        return isinstance(other, self.__class__) and self.vector == other.vector
 
     def __ne__(self, other: Any) -> bool:
         """Tells whether the vectors are not equal"""
@@ -130,8 +121,8 @@ class Vector:
 
         Returns
         -------
-        list
-            a list containing angle which the vector makes with respect to the axes.
+        Vector
+            A vector containing angle which the vector makes with respect to the axes.
         """
         norm = self.modulus()
         return Vector(list(map(lambda x: acos(x / norm), self.vector)))
@@ -150,7 +141,7 @@ class Vector:
         unit_vector = [ele / mod for ele in self.vector]
         return Vector(unit_vector)
 
-    def magnify(self, magnification: number = 1) -> "Vector":
+    def magnify(self, magnification: float = 1) -> "Vector":
         """Returns the scaled-up or scaled-down version of the vector
 
         Parameter
@@ -166,12 +157,12 @@ class Vector:
         new_vector = [ele * magnification for ele in self.vector]
         return Vector(new_vector)
 
-    def rotate(self, theta: number = pi, radians: bool = True) -> "Vector":
+    def rotate_2d(self, theta: float = pi, radians: bool = True) -> "Vector":
         """Rotates the given vector by the given angle in clockwise direction
 
         Parameters
         ----------
-        theta (int/float, optional)
+        theta (float, optional)
             The angle of rotation (in radians). Defaults to pi.
         radians (bool, optional)
             Unit of theta. radians (True) or degrees (False). Defaults to radians (True).
@@ -186,18 +177,53 @@ class Vector:
         ValueError
             Raised if the dimension of vector is not equal to 2.
         """
-        if self.length == 2:
-            x = self.vector[0]
-            y = self.vector[-1]
-            if not radians:
-                theta = theta * pi / 180
-            new_x = x * cos(theta) - y * sin(theta)
-            new_y = x * sin(theta) + y * cos(theta)
-            rotated = [new_x, *self.vector[1:-1], new_y]
-            return Vector(rotated)
-        raise ValueError("The dimension of the vector must be equal to 2.")
+        if self.length != 2:
+            raise ValueError("The dimension of the vector must be equal to 2.")
+        x, y = self.vector
+        if not radians:
+            theta = theta * pi / 180
+        new_x = x * cos(theta) - y * sin(theta)
+        new_y = x * sin(theta) + y * cos(theta)
+        return Vector([new_x, new_y])
 
-    def dot_product(self, other: "Vector") -> number:
+    def rotate_3d(self, theta: float, axis: "Vector", radians: bool = True) -> "Vector":
+        """Rotates the 3D vector around a given axis using Rodrigues' rotation formula.
+
+        Parameters
+        ----------
+        theta : float
+            The angle of rotation.
+        axis : Vector
+            The axis to rotate around.
+        radians : bool, optional
+            Whether theta is in radians or degrees. Defaults to True.
+
+        Returns
+        -------
+        Vector
+            The rotated 3D vector.
+
+        Raises
+        ------
+        ValueError
+            If the vector or the axis is not 3D.
+        """
+        if self.length != 3:
+            raise ValueError("The dimension of the vector must be equal to 3.")
+
+        if not radians:
+            theta = theta * pi / 180
+
+        # Rodrigues' rotation formula
+        cos_t = cos(theta)
+        sin_t = sin(theta)
+
+        v_parallel = axis * (self.dot_product(axis))
+        v_perp = self - v_parallel
+        w = axis.cross_product(self)
+        return v_parallel + v_perp * cos_t + w * sin_t
+
+    def dot_product(self, other: "Vector") -> float:
         """The dot product of two vectors, if possible
 
         Parameters
@@ -207,7 +233,7 @@ class Vector:
 
         Returns
         -------
-        Vector
+        float
             Dot product of the 2 vectors.
 
         Raises
@@ -216,10 +242,10 @@ class Vector:
             Raised if the dimension of vectors are not equal.
         """
         if self.length == other.length:
-            dotproduct = sum(
+            result = sum(
                 elem1 * elem2 for elem1, elem2 in zip(self.vector, other.vector)
             )
-            return dotproduct
+            return result
         raise ValueError("The dimension of the 2 vectors must be the same.")
 
     def cross_product(self, other: "Vector") -> "Vector":
@@ -258,7 +284,7 @@ class Vector:
 
     def is_unit(self) -> bool:
         """Tells whether the vector is a unit vector or not"""
-        sum_of_squares = 0
+        sum_of_squares = 0.0
         for i in self.vector:
             sum_of_squares += i**2
             if sum_of_squares > 1:
@@ -268,23 +294,18 @@ class Vector:
     def is_parallel(self, other: "Vector") -> bool:
         """Tells whether the vectors are parallel or not"""
         ratio = self.vector[0] / other.vector[0]
-        for i, j in zip(self.vector, other.vector):
-            if i / j != ratio:
-                return False
-        return True
+        return all(i / j == ratio for i, j in zip(self.vector, other.vector))
 
     def is_orthogonal(self, other: "Vector") -> bool:
         """Tells whether the vectors are orthogonal or not"""
         return self.dot_product(other) == 0
 
-    def to_list(self) -> List[number]:
+    def to_list(self) -> List[float]:
         """Returns the vector as a list"""
         return self.vector
-
-    def to_tuple(self) -> Tuple[number, ...]:
-        """Returns the vector as a tuple"""
-        return tuple(self.vector)
 
     # Alias
     arg = argument
     mod = modulus
+    dot = dot_product
+    cross = cross_product
