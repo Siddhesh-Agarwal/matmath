@@ -78,3 +78,15 @@ instead of importing like this:
 - Better support for `__matmul__` method in `Vector` and `Matrix` classes.
 
 NOTE: Python 3.6 and 3.7 are still supported even though they have reached [EOL](https://endoflife.date/python).
+
+
+## 2 February 2026 - v4.0.0
+
+- Added support for C extensions.
+- Dropped support for Python `3.6`, `3.7` and `3.8`.
+- Migrate to  UV from Poetry.
+- Updates in tests.
+    - Added `test/test_import.py`
+    - Added test in `tests/test_matrix.py`
+    - Updated tests in `tests/test_vector.py`
+    - Added common test file `tests/__init__.py`

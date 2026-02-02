@@ -1,15 +1,14 @@
-[tool.poetry]
+[project]
 name = "matmath"
-version = "3.2.0"
-description = "A simple and efficient module for matrix and vector manipulation."
-authors = ["Siddhesh Agarwal <siddhesh.agarwal@gmail.com>"]
-license = "MIT"
-repository = "https://github.com/Siddhesh-Agarwal/matmath"
-readme = "README.md"
-keywords = ["matrix", "vector", "math", "linear algebra", "algebra", "matmath"]
-packages = [
-    { include = "matmath"},
+version = "4.0.0"
+description = "A simple and efficient module for matrix and vector manipulation with C extensions."
+authors = [
+    {name = "Siddhesh Agarwal", email = "siddhesh.agarwal@gmail.com"}
 ]
+license = {text = "MIT" }
+readme = "README.md"
+keywords = ["matrix", "vector", "math", "linear algebra", "algebra", "matmath", "cpython", "performance"]
+requires-python = ">=3.9,<4.0"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -17,13 +16,13 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: C",
     "Topic :: Education",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Mathematics",
@@ -31,25 +30,25 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed",
-
+]
+dependencies = [
+    "setuptools>=80.10.2",
+    "wheel>=0.46.3",
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.8,<4.0"
+[project.urls]
+Homepage = "https://github.com/Siddhesh-Agarwal/matmath"
+Repository = "https://github.com/Siddhesh-Agarwal/matmath"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["matmath*"]
 
 [tool.pyrefly]
-project-includes = [
-    "**/*.py*",
-    "**/*.ipynb",
-]
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+project-includes = ["matmath/*.py*"]
 
 [dependency-groups]
 dev = [
-    "pyrefly (>=0.50.1,<0.51.0)",
-    "ruff (>=0.14.14,<0.15.0)"
+    "pyrefly>=0.50.1",
+    "ruff>=0.14.14",
 ]
