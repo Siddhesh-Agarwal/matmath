@@ -1,68 +1,106 @@
 # [matmath module](https://github.com/Siddhesh-Agarwal/matmath)
 
-A simple and efficient module for matrix manipulation.
+A high-performance and efficient module for matrix and vector manipulation, powered by **C extensions**.
 
 ![Downloads](https://static.pepy.tech/personalized-badge/matmath?period=total&units=international_system&left_color=grey&right_color=green&left_text=Downloads)
+[![PyPI version](https://badge.fury.io/py/matmath.svg)](https://badge.fury.io/py/matmath)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## Installing under Python
+## Performance
 
-When installing the **matmath module** for python, it is recommended that you check if you have **python 3.9 or above**. To install matmath, go to a terminal and run:
+`matmath` 4.0.0+ uses CPython extensions to provide near-native performance for all mathematical operations. This makes it suitable for applications ranging from simple geometry to complex numerical simulations where speed is critical.
 
-    pip install matmath
+## Installing
 
-To upgrade matmath, run:
+To install the **matmath module**, ensure you have **Python 3.9 or above**.
 
-    pip install --upgrade matmath
+```bash
+pip install matmath
+```
+
+To upgrade:
+
+```bash
+pip install --upgrade matmath
+```
 
 ---
 
-## Functions and their uses
+## Features and Usage
 
-The `Matrix` and `Vector` classes support all mathematical operations like addition, subtraction, multiplication, division, matrix multiplication, etc. Apart from that, the `Matrix` class also supports the following functions:
+### Vector Operations
+The `Vector` class represents an N-dimensional vector and supports a wide range of operations.
 
-### Matrix related functions
+#### Operator Support
+| Operation | Description |
+| :--- | :--- |
+| **Addition** | Element-wise addition (`v1 + v2`) |
+| **Subtraction** | Element-wise subtraction (`v1 - v2`) |
+| **Multiplication** | Scalar multiplication (`v1 * scalar`) |
+| **Multiplication** | Element-wise multiplication (`v1 * v2`) |
+| **Division** | Scalar division (`v1 / scalar`) |
+| **Cross Product** | Uses `@` operator for cross product (2D/3D) (`v1 @ v2`) |
+| **Modulus** | Returns the magnitude of the vector (`abs(v1)`) |
 
-| Functions                | Description                                                                                              |
-| :----------------------- | -------------------------------------------------------------------------------------------------------- |
-| `.adjoint()`             | Returns the adjoint of the matrix.                                                                       |
-| `.adj()`                 | Alias of `.adjoint()`                                                                                    |
-| `.cofactor()`            | Returns the cofactor of the matrix.                                                                      |
-| `.copy()`                | Returns a copy of the matrix.                                                                            |
-| `.cut()`                 | Returns a smaller matrix by removing the required row and column. The default of row and column is None. |
-| `.determinant()`         | Returns the determinant of the matrix (if mathematically possible).                                      |
-| `.det()`                 | Alias of `.determinant()`.                                                                               |
-| `.inverse()`             | Returns the inverse of the matrix (if mathematically possible) multiplied by the multiplication factor.  |
-| `.inv()`                 | Alias of `.inverse()`.                                                                                   |
-| `.is_diagonal()`         | Tells if input is a diagonal matrix.                                                                     |
-| `.is_identity()`         | Tells if input is an identity matrix.                                                                    |
-| `.is_lower_triangular()` | Tells if input is a lower triangular matrix.                                                             |
-| `.is_null()`             | Tells if input is a null matrix.                                                                         |
-| `.is_skew_symmetric()`   | Tells if input is a skew symmetric matrix.                                                               |
-| `.is_square()`           | Tells if input is a square matrix.                                                                       |
-| `.is_symmetric()`        | Tells if input is a symmetric matrix.                                                                    |
-| `.is_upper_triangular()` | Tells if input is an upper triangular matrix.                                                            |
-| `.order()`               | Returns the order of the matrix as a tuple of the form (rows, columns).                                  |
-| `.rotate()`              | Returns a matrix which is formed by rotating the given matrix, n times, in clockwise sense.              |
-| `.trace()`               | Returns the trace of the matrix, if mathematically possible.                                             |
-| `.transpose()`           | Returns the transpose of the matrix.                                                                     |
-| `identity()`             | Returns an identity matrix of order N x N multiplied by the multiplication factor.                       |
-| `zero()`                 | Returns a null matrix of order N x M. If only 1 parameter is given returns a null matrix of order N x N. |
+#### Vector Methods
+| Method | Description |
+| :--- | :--- |
+| `.modulus()` | Returns the magnitude of the vector. |
+| `.argument()` | Returns the argument (angles) of the vector. |
+| `.unit_vector()` | Returns a unit vector in the same direction. |
+| `.magnify(m)` | Magnifies the vector by factor `m`. |
+| `.rotate_2d(theta, radians=True)` | Rotates a 2D vector by `theta`. |
+| `.rotate_3d(theta, axis, radians=True)` | Rotates a 3D vector around an `axis` using Rodrigues' formula. |
+| `.dot_product(v)` | Returns the dot product with vector `v`. |
+| `.cross_product(v)` | Returns the cross product with vector `v`. |
+| `.is_unit()` | Checks if the magnitude is 1. |
+| `.is_parallel(v)` | Checks if the vector is parallel to `v`. |
+| `.is_orthogonal(v)` | Checks if the vector is orthogonal to `v`. |
+| `.copy()` | Returns a copy of the vector. |
+| `.to_list()` | Converts the vector to a Python list. |
 
-### Vector related functions
+#### Vector Aliases
+| Original Method | Alias |
+| :--- | :--- |
+| `.modulus()` | `.mod()` |
+| `.argument()` | `.arg()` |
+| `.dot_product(v)` | `.dot(v)` |
+| `.cross_product(v)` | `.cross(v)` |
 
-| Method          | Description                                                 |
-| --------------- | ----------------------------------------------------------- |
-| `argument`      | Returns the argument of the vector.                         |
-| `cross_product` | Cross product of the vector with respect to another vector. |
-| `dot_product`   | Dot product of the vector with respect to another vector.   |
-| `is_parellel`   | Tells whether the two vectors are parellel or not.          |
-| `is_unit`       | Tells whether the vector is a unit vector or not.           |
-| `magnify`       | Magnifies a vector.                                         |
-| `modulus`       | Returns the modulus of the vector.                          |
-| `rotate`        | Rotates the 2d vector in 2D space.                          |
-| `unit_vector`   | Returns the unit vector in the direction of the vector.     |
+### Matrix Operations
+The `Matrix` class represents an M x N matrix.
+
+#### Operator Support
+| Operation | Description |
+| :--- | :--- |
+| **Addition** | Matrix addition (`m1 + m2`) |
+| **Subtraction** | Matrix subtraction (`m1 - m2`) |
+| **Scalar Mul** | Multiplies all elements by scalar (`m1 * scalar`) |
+| **Element-wise** | Hadamard (element-wise) multiplication (`m1 * m2`) |
+| **Matrix Mul** | Standard matrix multiplication (`m1 @ m2`) |
+| **Division** | Scalar division (`m1 / scalar`) |
+
+#### Matrix Methods
+| Method | Description |
+| :--- | :--- |
+| `.transpose()` | Returns the transpose of the matrix. |
+| `.determinant()` | Returns the determinant of a square matrix. |
+| `.trace()` | Returns the sum of diagonal elements. |
+| `.order` (property) | Returns `(rows, cols)` of the matrix. |
+| `.is_square()` | Returns `True` if rows == cols. |
+| `.is_symmetric()` | Checks if the matrix is symmetric. |
+| `.is_diagonal()` | Checks if the matrix is diagonal. |
+| `.is_identity()` | Checks if the matrix is identity. |
+| `.copy()` | Returns a copy of the matrix. |
+| `.to_list()` | Converts the matrix to a list of lists. |
+
+#### Matrix Aliases
+| Original Method | Alias |
+| :--- | :--- |
+| `.determinant()` | `.det()` |
+| `.order` | `.size` |
 
 ---
 
@@ -71,12 +109,14 @@ The `Matrix` and `Vector` classes support all mathematical operations like addit
 Please feel free to reach out if you have any questions:
 
 - **Name**: Siddhesh Agarwal
-- **E-mail**: [siddhesh.agarwal@gmail.com](mailto:siddhesh.agarwal@gmail.com)
+- **Email**: [siddhesh.agarwal@gmail.com](mailto:siddhesh.agarwal@gmail.com)
+- **GitHub**: [Siddhesh-Agarwal](https://www.github.com/Siddhesh-Agarwal)
 
 ---
 
 ## License
 
+```plaintext
 MIT License
 
 Copyright (c) 2021 [Siddhesh-Agarwal](https://www.github.com/Siddhesh-Agarwal)
@@ -98,3 +138,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+```
