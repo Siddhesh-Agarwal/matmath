@@ -1,5 +1,6 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <structmember.h>
 
