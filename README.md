@@ -8,7 +8,7 @@ A simple and efficient module for matrix manipulation.
 
 ## Installing under Python
 
-When installing the **matmath module** for python, it is recommended that you check if you have **python 3.6 or above**. To install matmath, goto a terminal and run:
+When installing the **matmath module** for python, it is recommended that you check if you have **python 3.9 or above**. To install matmath, go to a terminal and run:
 
     pip install matmath
 
@@ -63,9 +63,6 @@ The `Matrix` and `Vector` classes support all mathematical operations like addit
 | `modulus`       | Returns the modulus of the vector.                          |
 | `rotate`        | Rotates the 2d vector in 2D space.                          |
 | `unit_vector`   | Returns the unit vector in the direction of the vector.     |
-| `x`             | Returns the 1st component of the vector.                    |
-| `y`             | Returns the 2nd component of the vector.                    |
-| `z`             | Returns the 3rd component of the vector.                    |
 
 ---
 
