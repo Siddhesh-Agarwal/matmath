@@ -6,7 +6,7 @@ class TestVector(unittest.TestCase):
     # Ways to create a Vector
     def test_vector_init_default(self):
         vec = Vector()  # defaults to <0, 0>
-        self.assertEqual(vec.to_list(), [0.0, 0.0])
+        self.assertEqual(vec, Vector([0, 0]))
 
     def test_vector_init_list(self):
         vec1 = Vector([1, 2, 3])
@@ -15,7 +15,7 @@ class TestVector(unittest.TestCase):
 
     def test_vector_init_none(self):
         vec = Vector(None)
-        self.assertEqual(vec.to_list(), [0.0, 0.0])
+        self.assertEqual(vec, Vector([0, 0]))
 
     def test_vector_inequality(self):
         vec1 = Vector([1, 2, 3])
@@ -38,7 +38,22 @@ class TestVector(unittest.TestCase):
 
     def test_repr(self):
         vec = Vector([1, 2, 3])
-        self.assertEqual(repr(vec), "Vector(1, 2, 3)")
+        self.assertEqual(repr(vec), "Vector([1, 2, 3])")
+
+    def test_bool_zero_vector(self):
+        """Test that a zero vector evaluates to False."""
+        v = Vector([0, 0])
+        self.assertFalse(bool(v), "Zero vector should be False")
+
+    def test_bool_nonzero_vector(self):
+        """Test that a non-zero vector evaluates to True."""
+        v = Vector([1, 0])
+        self.assertTrue(bool(v), "Non-zero vector should be True")
+
+    def test_bool_all_nonzero(self):
+        """Test that a vector with all non-zero elements evaluates to True."""
+        v = Vector([1, 2, 3])
+        self.assertTrue(bool(v), "Vector with all non-zero elements should be True")
 
     def test_add(self):
         vec1 = Vector([1, 2, 3])
@@ -59,17 +74,18 @@ class TestVector(unittest.TestCase):
         vec1 = Vector([1, 2, 3])
         vec2 = Vector([4, 5, 6])
         self.assertEqual(vec1 * vec2, Vector([4, 10, 18]))
+        self.assertEqual(vec2 * vec1, Vector([4, 10, 18]))
 
     def test_div_scalar(self):
         vec1 = Vector([2, 4, 6])
         self.assertEqual(vec1 / 2, Vector([1, 2, 3]))
 
     def test_matmul(self):
-        # Note: @ is cross product in this library
-        vec1 = Vector([1, 2, 3])
         vec2 = Vector([4, 5, 6])
+        vec1 = Vector([1, 2, 3])
         # Cross product of [1,2,3] and [4,5,6] is [-3, 6, -3]
         self.assertEqual(vec1 @ vec2, Vector([-3, 6, -3]))
+        self.assertEqual(vec2 @ vec1, Vector([12, -30, -9]))
 
     def test_modulus(self):
         vec1 = Vector([2, 3, 6])
@@ -85,7 +101,7 @@ class TestVector(unittest.TestCase):
     def test_unit_vector(self):
         vec = Vector([3, 4])
         unit = vec.unit_vector()
-        self.assertEqual(unit.to_list(), [0.6, 0.8])
+        self.assertEqual(unit, Vector([0.6, 0.8]))
         self.assertAlmostEqual(unit.modulus(), 1.0)
 
     def test_is_unit(self):
