@@ -5,7 +5,7 @@ description = "A simple and efficient module for matrix and vector manipulation 
 authors = [
     {name = "Siddhesh Agarwal", email = "siddhesh.agarwal@gmail.com"}
 ]
-license = {text = "MIT" }
+license = "MIT"
 readme = "README.md"
 keywords = ["matrix", "vector", "math", "linear algebra", "algebra", "matmath", "cpython", "performance"]
 requires-python = ">=3.9,<4.0"
@@ -14,7 +14,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
