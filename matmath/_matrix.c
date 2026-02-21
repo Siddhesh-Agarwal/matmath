@@ -619,6 +619,594 @@ static PyObject* Matrix_to_list(MatrixObject *self, PyObject *Py_UNUSED(ignored)
     return result;
 }
 
+/* Matrix.__iter__ */
+static PyObject* Matrix_iter(MatrixObject *self) {
+    PyObject *list = Matrix_to_list(self, NULL);
+    if (list == NULL) {
+        return NULL;
+    }
+    PyObject *iter = PyObject_GetIter(list);
+    Py_DECREF(list);
+    return iter;
+}
+
+/* Matrix.__floordiv__ */
+static PyObject* Matrix_floordiv(MatrixObject *self, PyObject *other) {
+    double **result_data = alloc_matrix(self->rows, self->cols);
+    if (result_data == NULL) {
+        return PyErr_NoMemory();
+    }
+    
+    if (PyFloat_Check(other) || PyLong_Check(other)) {
+        /* Scalar floor division */
+        double scalar = PyFloat_AsDouble(other);
+        if (scalar == 0.0) {
+            free_matrix(result_data, self->rows);
+            PyErr_SetString(PyExc_ZeroDivisionError, "Division by zero");
+            return NULL;
+        }
+        for (Py_ssize_t i = 0; i < self->rows; i++) {
+            for (Py_ssize_t j = 0; j < self->cols; j++) {
+                result_data[i][j] = floor(self->data[i][j] / scalar);
+            }
+        }
+    } else if (PyObject_TypeCheck(other, &MatrixType)) {
+        /* Element-wise floor division */
+        MatrixObject *other_mat = (MatrixObject *)other;
+        if (self->rows != other_mat->rows || self->cols != other_mat->cols) {
+            free_matrix(result_data, self->rows);
+            PyErr_SetString(PyExc_ValueError, "The 2 matrices do not have the same order.");
+            return NULL;
+        }
+        for (Py_ssize_t i = 0; i < self->rows; i++) {
+            for (Py_ssize_t j = 0; j < self->cols; j++) {
+                if (other_mat->data[i][j] == 0.0) {
+                    free_matrix(result_data, self->rows);
+                    PyErr_SetString(PyExc_ZeroDivisionError, "Division by zero");
+                    return NULL;
+                }
+                result_data[i][j] = floor(self->data[i][j] / other_mat->data[i][j]);
+            }
+        }
+    } else {
+        free_matrix(result_data, self->rows);
+        PyErr_SetString(PyExc_TypeError, "Floor division not supported between Matrix and given type.");
+        return NULL;
+    }
+    
+    MatrixObject *result = Matrix_new_from_data(result_data, self->rows, self->cols);
+    free_matrix(result_data, self->rows);
+    return (PyObject *)result;
+}
+
+/* Matrix.__imul__ */
+static PyObject* Matrix_imul(MatrixObject *self, PyObject *other) {
+    if (PyFloat_Check(other) || PyLong_Check(other)) {
+        /* Scalar multiplication */
+        double scalar = PyFloat_AsDouble(other);
+        for (Py_ssize_t i = 0; i < self->rows; i++) {
+            for (Py_ssize_t j = 0; j < self->cols; j++) {
+                self->data[i][j] *= scalar;
+            }
+        }
+    } else if (PyObject_TypeCheck(other, &MatrixType)) {
+        /* Element-wise multiplication */
+        MatrixObject *other_mat = (MatrixObject *)other;
+        if (self->rows != other_mat->rows || self->cols != other_mat->cols) {
+            PyErr_SetString(PyExc_ValueError, "The 2 matrices do not have the same order.");
+            return NULL;
+        }
+        for (Py_ssize_t i = 0; i < self->rows; i++) {
+            for (Py_ssize_t j = 0; j < self->cols; j++) {
+                self->data[i][j] *= other_mat->data[i][j];
+            }
+        }
+    } else {
+        PyErr_SetString(PyExc_TypeError, "Multiplication not supported between Matrix and given type.");
+        return NULL;
+    }
+    
+    Py_INCREF(self);
+    return (PyObject *)self;
+}
+
+/* Matrix.cut */
+static PyObject* Matrix_cut(MatrixObject *self, PyObject *args, PyObject *kwds) {
+    PyObject *i_obj = NULL, *j_obj = NULL;
+    static char *kwlist[] = {"i", "j", NULL};
+    
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|OO", kwlist, &i_obj, &j_obj)) {
+        return NULL;
+    }
+    
+    Py_ssize_t i = -1, j = -1;
+    int remove_row = 0, remove_col = 0;
+    
+    if (i_obj != NULL && i_obj != Py_None) {
+        i = PyLong_AsSsize_t(i_obj);
+        if (i == -1 && PyErr_Occurred()) {
+            return NULL;
+        }
+        if (i < 0 || i >= self->rows) {
+            PyErr_SetString(PyExc_ValueError, "The row to be removed is not present in the matrix.");
+            return NULL;
+        }
+        remove_row = 1;
+    }
+    
+    if (j_obj != NULL && j_obj != Py_None) {
+        j = PyLong_AsSsize_t(j_obj);
+        if (j == -1 && PyErr_Occurred()) {
+            return NULL;
+        }
+        if (j < 0 || j >= self->cols) {
+            PyErr_SetString(PyExc_ValueError, "The column to be removed is not present in the matrix.");
+            return NULL;
+        }
+        remove_col = 1;
+    }
+    
+    if (!remove_row && !remove_col) {
+        return Matrix_copy(self, NULL);
+    }
+    
+    Py_ssize_t new_rows = remove_row ? self->rows - 1 : self->rows;
+    Py_ssize_t new_cols = remove_col ? self->cols - 1 : self->cols;
+    
+    double **result_data = alloc_matrix(new_rows, new_cols);
+    if (result_data == NULL) {
+        return PyErr_NoMemory();
+    }
+    
+    Py_ssize_t dest_i = 0;
+    for (Py_ssize_t src_i = 0; src_i < self->rows; src_i++) {
+        if (remove_row && src_i == i) {
+            continue;
+        }
+        Py_ssize_t dest_j = 0;
+        for (Py_ssize_t src_j = 0; src_j < self->cols; src_j++) {
+            if (remove_col && src_j == j) {
+                continue;
+            }
+            result_data[dest_i][dest_j] = self->data[src_i][src_j];
+            dest_j++;
+        }
+        dest_i++;
+    }
+    
+    MatrixObject *result = Matrix_new_from_data(result_data, new_rows, new_cols);
+    free_matrix(result_data, new_rows);
+    return (PyObject *)result;
+}
+
+/* Matrix.minor */
+static PyObject* Matrix_minor(MatrixObject *self, PyObject *args, PyObject *kwds) {
+    Py_ssize_t i = 0, j = 0;
+    static char *kwlist[] = {"i", "j", NULL};
+    
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|nn", kwlist, &i, &j)) {
+        return NULL;
+    }
+    
+    PyObject *cut_args = Py_BuildValue("(nn)", i, j);
+    if (cut_args == NULL) {
+        return NULL;
+    }
+    
+    PyObject *reduced = Matrix_cut(self, cut_args, NULL);
+    Py_DECREF(cut_args);
+    if (reduced == NULL) {
+        return NULL;
+    }
+    
+    PyObject *det = Matrix_determinant((MatrixObject *)reduced, NULL);
+    Py_DECREF(reduced);
+    return det;
+}
+
+/* Matrix.cofactor */
+static PyObject* Matrix_cofactor(MatrixObject *self, PyObject *args, PyObject *kwds) {
+    Py_ssize_t i, j;
+    static char *kwlist[] = {"i", "j", NULL};
+    
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "nn", kwlist, &i, &j)) {
+        return NULL;
+    }
+    
+    PyObject *minor_val = Matrix_minor(self, args, kwds);
+    if (minor_val == NULL) {
+        return NULL;
+    }
+    
+    double minor = PyFloat_AsDouble(minor_val);
+    Py_DECREF(minor_val);
+    
+    double sign = ((i + j) % 2 == 0) ? 1.0 : -1.0;
+    return PyFloat_FromDouble(sign * minor);
+}
+
+/* Matrix.adjoint */
+static PyObject* Matrix_adjoint(MatrixObject *self, PyObject *Py_UNUSED(ignored)) {
+    if (self->rows != self->cols) {
+        PyErr_SetString(PyExc_ValueError, "The given matrix is not a square matrix.");
+        return NULL;
+    }
+    
+    double **result_data = alloc_matrix(self->rows, self->cols);
+    if (result_data == NULL) {
+        return PyErr_NoMemory();
+    }
+    
+    for (Py_ssize_t i = 0; i < self->rows; i++) {
+        for (Py_ssize_t j = 0; j < self->cols; j++) {
+            PyObject *args = Py_BuildValue("(nn)", i, j);
+            if (args == NULL) {
+                free_matrix(result_data, self->rows);
+                return NULL;
+            }
+            
+            PyObject *cof = Matrix_cofactor(self, args, NULL);
+            Py_DECREF(args);
+            if (cof == NULL) {
+                free_matrix(result_data, self->rows);
+                return NULL;
+            }
+            
+            result_data[j][i] = PyFloat_AsDouble(cof);  // Transposed
+            Py_DECREF(cof);
+        }
+    }
+    
+    MatrixObject *result = Matrix_new_from_data(result_data, self->rows, self->cols);
+    free_matrix(result_data, self->rows);
+    return (PyObject *)result;
+}
+
+/* Matrix.inverse */
+static PyObject* Matrix_inverse(MatrixObject *self, PyObject *Py_UNUSED(ignored)) {
+    if (self->rows != self->cols) {
+        PyErr_SetString(PyExc_ValueError, "The given matrix is not a square matrix.");
+        return NULL;
+    }
+    
+    PyObject *det_obj = Matrix_determinant(self, NULL);
+    if (det_obj == NULL) {
+        return NULL;
+    }
+    
+    double det = PyFloat_AsDouble(det_obj);
+    Py_DECREF(det_obj);
+    
+    if (fabs(det) < 1e-10) {
+        PyErr_SetString(PyExc_ValueError, "The given matrix is not invertible.");
+        return NULL;
+    }
+    
+    PyObject *adj = Matrix_adjoint(self, NULL);
+    if (adj == NULL) {
+        return NULL;
+    }
+    
+    PyObject *scalar = PyFloat_FromDouble(1.0 / det);
+    if (scalar == NULL) {
+        Py_DECREF(adj);
+        return NULL;
+    }
+    
+    PyObject *result = Matrix_mul((MatrixObject *)adj, scalar);
+    Py_DECREF(adj);
+    Py_DECREF(scalar);
+    
+    return result;
+}
+
+/* Matrix.is_invertible */
+static PyObject* Matrix_is_invertible(MatrixObject *self, PyObject *Py_UNUSED(ignored)) {
+    if (self->rows != self->cols) {
+        Py_RETURN_FALSE;
+    }
+    
+    PyObject *det_obj = Matrix_determinant(self, NULL);
+    if (det_obj == NULL) {
+        return NULL;
+    }
+    
+    double det = PyFloat_AsDouble(det_obj);
+    Py_DECREF(det_obj);
+    
+    if (fabs(det) < 1e-10) {
+        Py_RETURN_FALSE;
+    }
+    Py_RETURN_TRUE;
+}
+
+/* Matrix.is_null */
+static PyObject* Matrix_is_null(MatrixObject *self, PyObject *Py_UNUSED(ignored)) {
+    for (Py_ssize_t i = 0; i < self->rows; i++) {
+        for (Py_ssize_t j = 0; j < self->cols; j++) {
+            if (self->data[i][j] != 0.0) {
+                Py_RETURN_FALSE;
+            }
+        }
+    }
+    Py_RETURN_TRUE;
+}
+
+/* Matrix.is_skew_symmetric */
+static PyObject* Matrix_is_skew_symmetric(MatrixObject *self, PyObject *Py_UNUSED(ignored)) {
+    if (self->rows != self->cols) {
+        Py_RETURN_FALSE;
+    }
+    
+    for (Py_ssize_t i = 0; i < self->rows; i++) {
+        for (Py_ssize_t j = i; j < self->cols; j++) {
+            if (self->data[i][j] != -self->data[j][i]) {
+                Py_RETURN_FALSE;
+            }
+        }
+    }
+    Py_RETURN_TRUE;
+}
+
+/* Matrix.is_lower_triangular */
+static PyObject* Matrix_is_lower_triangular(MatrixObject *self, PyObject *Py_UNUSED(ignored)) {
+    if (self->rows != self->cols) {
+        Py_RETURN_FALSE;
+    }
+    
+    for (Py_ssize_t i = 0; i < self->rows; i++) {
+        for (Py_ssize_t j = i + 1; j < self->cols; j++) {
+            if (self->data[i][j] != 0.0) {
+                Py_RETURN_FALSE;
+            }
+        }
+    }
+    Py_RETURN_TRUE;
+}
+
+/* Matrix.is_upper_triangular */
+static PyObject* Matrix_is_upper_triangular(MatrixObject *self, PyObject *Py_UNUSED(ignored)) {
+    if (self->rows != self->cols) {
+        Py_RETURN_FALSE;
+    }
+    
+    for (Py_ssize_t i = 0; i < self->rows; i++) {
+        for (Py_ssize_t j = 0; j < i; j++) {
+            if (self->data[i][j] != 0.0) {
+                Py_RETURN_FALSE;
+            }
+        }
+    }
+    Py_RETURN_TRUE;
+}
+
+/* Matrix.pow */
+static PyObject* Matrix_pow_method(MatrixObject *self, PyObject *args, PyObject *kwds) {
+    Py_ssize_t power = 2;
+    static char *kwlist[] = {"power", NULL};
+    
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|n", kwlist, &power)) {
+        return NULL;
+    }
+    
+    if (self->rows != self->cols) {
+        PyErr_SetString(PyExc_ValueError, "The given matrix is not a square matrix.");
+        return NULL;
+    }
+    
+    if (power < 0) {
+        PyErr_SetString(PyExc_ValueError, "The power of the matrix must be a natural number");
+        return NULL;
+    }
+    
+    if (power == 0) {
+        // Return identity matrix
+        double **result_data = alloc_matrix(self->rows, self->cols);
+        if (result_data == NULL) {
+            return PyErr_NoMemory();
+        }
+        
+        for (Py_ssize_t i = 0; i < self->rows; i++) {
+            for (Py_ssize_t j = 0; j < self->cols; j++) {
+                result_data[i][j] = (i == j) ? 1.0 : 0.0;
+            }
+        }
+        
+        MatrixObject *result = Matrix_new_from_data(result_data, self->rows, self->cols);
+        free_matrix(result_data, self->rows);
+        return (PyObject *)result;
+    }
+    
+    MatrixObject *result = (MatrixObject *)Matrix_copy(self, NULL);
+    if (result == NULL) {
+        return NULL;
+    }
+    
+    for (Py_ssize_t p = 1; p < power; p++) {
+        PyObject *temp = Matrix_matmul(result, (PyObject *)self);
+        Py_DECREF(result);
+        if (temp == NULL) {
+            return NULL;
+        }
+        result = (MatrixObject *)temp;
+    }
+    
+    return (PyObject *)result;
+}
+
+/* Matrix.rotate */
+static PyObject* Matrix_rotate(MatrixObject *self, PyObject *args, PyObject *kwds) {
+    Py_ssize_t turns = 1;
+    static char *kwlist[] = {"turns", NULL};
+    
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|n", kwlist, &turns)) {
+        return NULL;
+    }
+    
+    turns = turns % 4;
+    if (turns < 0) {
+        turns += 4;
+    }
+    
+    if (turns == 0) {
+        return Matrix_copy(self, NULL);
+    }
+    
+    double **result_data = NULL;
+    Py_ssize_t new_rows, new_cols;
+    
+    if (turns == 2) {
+        // 180 degree rotation
+        new_rows = self->rows;
+        new_cols = self->cols;
+        result_data = alloc_matrix(new_rows, new_cols);
+        if (result_data == NULL) {
+            return PyErr_NoMemory();
+        }
+        
+        for (Py_ssize_t i = 0; i < self->rows; i++) {
+            for (Py_ssize_t j = 0; j < self->cols; j++) {
+                result_data[new_rows - 1 - i][new_cols - 1 - j] = self->data[i][j];
+            }
+        }
+    } else {
+        // 90 or 270 degree rotation (dimensions swap)
+        new_rows = self->cols;
+        new_cols = self->rows;
+        result_data = alloc_matrix(new_rows, new_cols);
+        if (result_data == NULL) {
+            return PyErr_NoMemory();
+        }
+        
+        if (turns == 1) {
+            // 90 degree clockwise
+            for (Py_ssize_t i = 0; i < self->rows; i++) {
+                for (Py_ssize_t j = 0; j < self->cols; j++) {
+                    result_data[j][self->rows - 1 - i] = self->data[i][j];
+                }
+            }
+        } else {  // turns == 3
+            // 270 degree clockwise (90 counter-clockwise)
+            for (Py_ssize_t i = 0; i < self->rows; i++) {
+                for (Py_ssize_t j = 0; j < self->cols; j++) {
+                    result_data[self->cols - 1 - j][i] = self->data[i][j];
+                }
+            }
+        }
+    }
+    
+    MatrixObject *result = Matrix_new_from_data(result_data, new_rows, new_cols);
+    free_matrix(result_data, new_rows);
+    return (PyObject *)result;
+}
+
+/* Matrix.identity - static method */
+static PyObject* Matrix_identity(PyObject *cls, PyObject *args, PyObject *kwds) {
+    Py_ssize_t n = 3;
+    static char *kwlist[] = {"n", NULL};
+    
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|n", kwlist, &n)) {
+        return NULL;
+    }
+    
+    if (n <= 0) {
+        PyErr_SetString(PyExc_ValueError, "Matrix size must be positive");
+        return NULL;
+    }
+    
+    double **data = alloc_matrix(n, n);
+    if (data == NULL) {
+        return PyErr_NoMemory();
+    }
+    
+    for (Py_ssize_t i = 0; i < n; i++) {
+        for (Py_ssize_t j = 0; j < n; j++) {
+            data[i][j] = (i == j) ? 1.0 : 0.0;
+        }
+    }
+    
+    MatrixObject *result = Matrix_new_from_data(data, n, n);
+    free_matrix(data, n);
+    return (PyObject *)result;
+}
+
+/* Matrix.zero - static method */
+static PyObject* Matrix_zero(PyObject *cls, PyObject *args, PyObject *kwds) {
+    PyObject *order_obj;
+    static char *kwlist[] = {"order", NULL};
+    
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", kwlist, &order_obj)) {
+        return NULL;
+    }
+    
+    if (!PyTuple_Check(order_obj) || PyTuple_Size(order_obj) != 2) {
+        PyErr_SetString(PyExc_TypeError, "order must be a tuple of (rows, cols)");
+        return NULL;
+    }
+    
+    Py_ssize_t rows = PyLong_AsSsize_t(PyTuple_GetItem(order_obj, 0));
+    Py_ssize_t cols = PyLong_AsSsize_t(PyTuple_GetItem(order_obj, 1));
+    
+    if (rows <= 0 || cols <= 0) {
+        PyErr_SetString(PyExc_ValueError, "Matrix dimensions must be positive");
+        return NULL;
+    }
+    
+    double **data = alloc_matrix(rows, cols);
+    if (data == NULL) {
+        return PyErr_NoMemory();
+    }
+    
+    for (Py_ssize_t i = 0; i < rows; i++) {
+        for (Py_ssize_t j = 0; j < cols; j++) {
+            data[i][j] = 0.0;
+        }
+    }
+    
+    MatrixObject *result = Matrix_new_from_data(data, rows, cols);
+    free_matrix(data, rows);
+    return (PyObject *)result;
+}
+
+/* Matrix.fill - static method */
+static PyObject* Matrix_fill(PyObject *cls, PyObject *args, PyObject *kwds) {
+    double value;
+    PyObject *order_obj;
+    static char *kwlist[] = {"value", "order", NULL};
+    
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "dO", kwlist, &value, &order_obj)) {
+        return NULL;
+    }
+    
+    if (!PyTuple_Check(order_obj) || PyTuple_Size(order_obj) != 2) {
+        PyErr_SetString(PyExc_TypeError, "order must be a tuple of (rows, cols)");
+        return NULL;
+    }
+    
+    Py_ssize_t rows = PyLong_AsSsize_t(PyTuple_GetItem(order_obj, 0));
+    Py_ssize_t cols = PyLong_AsSsize_t(PyTuple_GetItem(order_obj, 1));
+    
+    if (rows <= 0 || cols <= 0) {
+        PyErr_SetString(PyExc_ValueError, "Matrix dimensions must be positive");
+        return NULL;
+    }
+    
+    double **data = alloc_matrix(rows, cols);
+    if (data == NULL) {
+        return PyErr_NoMemory();
+    }
+    
+    for (Py_ssize_t i = 0; i < rows; i++) {
+        for (Py_ssize_t j = 0; j < cols; j++) {
+            data[i][j] = value;
+        }
+    }
+    
+    MatrixObject *result = Matrix_new_from_data(data, rows, cols);
+    free_matrix(data, rows);
+    return (PyObject *)result;
+}
+
 /* Matrix.order property */
 static PyObject* Matrix_get_order(MatrixObject *self, void *closure) {
     return Py_BuildValue("(nn)", self->rows, self->cols);
@@ -675,9 +1263,29 @@ static PyMethodDef Matrix_methods[] = {
     {"is_square", (PyCFunction)Matrix_is_square, METH_NOARGS, "Check if square"},
     {"is_symmetric", (PyCFunction)Matrix_is_symmetric, METH_NOARGS, "Check if symmetric"},
     {"is_diagonal", (PyCFunction)Matrix_is_diagonal, METH_NOARGS, "Check if diagonal"},
+    {"is_diagonal_dominant", (PyCFunction)Matrix_is_diagonal, METH_NOARGS, "Alias for is_diagonal"},
     {"is_identity", (PyCFunction)Matrix_is_identity, METH_NOARGS, "Check if identity"},
+    {"is_invertible", (PyCFunction)Matrix_is_invertible, METH_NOARGS, "Check if invertible"},
+    {"is_lower_triangular", (PyCFunction)Matrix_is_lower_triangular, METH_NOARGS, "Check if lower triangular"},
+    {"is_lower_hessenberg", (PyCFunction)Matrix_is_lower_triangular, METH_NOARGS, "Alias for is_lower_triangular"},
+    {"is_upper_triangular", (PyCFunction)Matrix_is_upper_triangular, METH_NOARGS, "Check if upper triangular"},
+    {"is_upper_hessenberg", (PyCFunction)Matrix_is_upper_triangular, METH_NOARGS, "Alias for is_upper_triangular"},
+    {"is_null", (PyCFunction)Matrix_is_null, METH_NOARGS, "Check if null matrix"},
+    {"is_skew_symmetric", (PyCFunction)Matrix_is_skew_symmetric, METH_NOARGS, "Check if skew symmetric"},
     {"copy", (PyCFunction)Matrix_copy, METH_NOARGS, "Create a copy"},
     {"to_list", (PyCFunction)Matrix_to_list, METH_NOARGS, "Convert to list"},
+    {"cut", (PyCFunction)Matrix_cut, METH_VARARGS | METH_KEYWORDS, "Remove row and/or column"},
+    {"minor", (PyCFunction)Matrix_minor, METH_VARARGS | METH_KEYWORDS, "Calculate minor"},
+    {"cofactor", (PyCFunction)Matrix_cofactor, METH_VARARGS | METH_KEYWORDS, "Calculate cofactor"},
+    {"adjoint", (PyCFunction)Matrix_adjoint, METH_NOARGS, "Calculate adjoint"},
+    {"adj", (PyCFunction)Matrix_adjoint, METH_NOARGS, "Alias for adjoint"},
+    {"inverse", (PyCFunction)Matrix_inverse, METH_NOARGS, "Calculate inverse"},
+    {"inv", (PyCFunction)Matrix_inverse, METH_NOARGS, "Alias for inverse"},
+    {"pow", (PyCFunction)Matrix_pow_method, METH_VARARGS | METH_KEYWORDS, "Raise to power"},
+    {"rotate", (PyCFunction)Matrix_rotate, METH_VARARGS | METH_KEYWORDS, "Rotate matrix"},
+    {"identity", (PyCFunction)Matrix_identity, METH_VARARGS | METH_KEYWORDS | METH_CLASS, "Create identity matrix"},
+    {"zero", (PyCFunction)Matrix_zero, METH_VARARGS | METH_KEYWORDS | METH_CLASS, "Create zero matrix"},
+    {"fill", (PyCFunction)Matrix_fill, METH_VARARGS | METH_KEYWORDS | METH_CLASS, "Create filled matrix"},
     {NULL}
 };
 
@@ -723,7 +1331,7 @@ static PyNumberMethods Matrix_as_number = {
     0,                                 /* nb_float */
     0,                                 /* nb_inplace_add */
     0,                                 /* nb_inplace_subtract */
-    0,                                 /* nb_inplace_multiply */
+    (binaryfunc)Matrix_imul,          /* nb_inplace_multiply */
     0,                                 /* nb_inplace_remainder */
     0,                                 /* nb_inplace_power */
     0,                                 /* nb_inplace_lshift */
@@ -731,7 +1339,7 @@ static PyNumberMethods Matrix_as_number = {
     0,                                 /* nb_inplace_and */
     0,                                 /* nb_inplace_xor */
     0,                                 /* nb_inplace_or */
-    0,                                 /* nb_floor_divide */
+    (binaryfunc)Matrix_floordiv,      /* nb_floor_divide */
     (binaryfunc)Matrix_truediv,       /* nb_true_divide */
     0,                                 /* nb_inplace_floor_divide */
     0,                                 /* nb_inplace_true_divide */
@@ -755,6 +1363,7 @@ static PyTypeObject MatrixType = {
     .tp_str = (reprfunc)Matrix_str,
     .tp_as_number = &Matrix_as_number,
     .tp_as_sequence = &Matrix_as_sequence,
+    .tp_iter = (getiterfunc)Matrix_iter,
     .tp_richcompare = (richcmpfunc)Matrix_richcompare,
     .tp_methods = Matrix_methods,
     .tp_getset = Matrix_getsetters,
