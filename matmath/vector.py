@@ -29,7 +29,7 @@ class Vector:
 
     def __repr__(self) -> str:
         """Returns a string construction of the vector"""
-        return f"Vector({str(self.vector)[1:-1]})"
+        return f"Vector({str(self.vector)})"
 
     def __str__(self) -> str:
         """Returns a string representation of the vector"""

@@ -10,16 +10,13 @@ class Matrix:
     """A class to represent a matrix."""
 
     def __init__(self, mat: List[List[number]]):
-        self.matrix: List[List[number]] = []
-        self.rows: int = 0
-        self.cols: int = 0
-        self.rows = len(self.matrix)
-        self.cols = len(self.matrix[0])
+        self.rows: int = len(mat)
+        self.cols: int = len(mat[0])
         for i, row in enumerate(mat):
             if len(row) != self.cols:
                 raise ValueError("The matrix is not a proper matrix.")
             mat[i] = list(row)
-        self.matrix = list(mat)
+        self.matrix: List[List[number]] = mat
 
     def __len__(self) -> int:
         """Returns the number of rows in the matrix"""
@@ -460,7 +457,7 @@ class Matrix:
             The trace of the matrix.
         """
         if self.is_square():
-            total = 0
+            total = 0.0
             for i in range(self.rows):
                 total += self.matrix[i][i]
             return total

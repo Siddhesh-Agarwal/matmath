@@ -124,7 +124,7 @@ static PyObject* Vector_getitem(VectorObject *self, Py_ssize_t index) {
 
 /* Vector.__repr__ */
 static PyObject* Vector_repr(VectorObject *self) {
-    PyObject *result = PyUnicode_FromString("Vector(");
+    PyObject *result = PyUnicode_FromString("Vector([");
     for (Py_ssize_t i = 0; i < self->length; i++) {
         PyObject *num = PyUnicode_FromFormat("%.10g", self->data[i]);
         PyObject *temp = PyUnicode_Concat(result, num);
@@ -140,7 +140,7 @@ static PyObject* Vector_repr(VectorObject *self) {
             result = temp;
         }
     }
-    PyObject *paren = PyUnicode_FromString(")");
+    PyObject *paren = PyUnicode_FromString("])");
     PyObject *temp = PyUnicode_Concat(result, paren);
     Py_DECREF(result);
     Py_DECREF(paren);
@@ -695,10 +695,10 @@ static Py_hash_t Vector_hash(VectorObject *self) {
 static int Vector_bool(VectorObject *self) {
     for (Py_ssize_t i = 0; i < self->length; i++) {
         if (self->data[i] != 0.0) {
-            return 0;  /* Not all zero, so return False (inverted logic from Python) */
+            return 1;  /* Non-zero found, return True */
         }
     }
-    return 1;  /* All zero, so return True */
+    return 0;  /* All zeros, return False */
 }
 
 /* Method definitions */
