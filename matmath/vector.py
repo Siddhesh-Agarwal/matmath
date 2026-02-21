@@ -95,7 +95,7 @@ class Vector:
 
     def __bool__(self) -> bool:
         """Returns True if the vector is non-zero"""
-        return not all(self.vector)
+        return any(self.vector)
 
     def __abs__(self) -> float:
         """Returns the modulus of the vector"""
