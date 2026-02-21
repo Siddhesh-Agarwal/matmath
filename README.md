@@ -16,13 +16,13 @@ A high-performance and efficient module for matrix and vector manipulation, powe
 
 To install the **matmath module**, ensure you have **Python 3.9 or above**.
 
-```bash
+```sh
 pip install matmath
 ```
 
 To upgrade:
 
-```bash
+```sh
 pip install --upgrade matmath
 ```
 
@@ -41,8 +41,15 @@ The `Vector` class represents an N-dimensional vector and supports a wide range 
 | **Multiplication** | Scalar multiplication (`v1 * scalar`) |
 | **Multiplication** | Element-wise multiplication (`v1 * v2`) |
 | **Division** | Scalar division (`v1 / scalar`) |
+| **Division** | Element-wise division (`v1 / v2`) |
 | **Cross Product** | Uses `@` operator for cross product (2D/3D) (`v1 @ v2`) |
 | **Modulus** | Returns the magnitude of the vector (`abs(v1)`) |
+| **Indexing** | Access elements by index (`v1[i]`) |
+| **Length** | Returns the number of elements (`len(v1)`) |
+| **Comparison** | Equality checks (`v1 == v2`, `v1 != v2`) |
+| **Truth Value** | `bool(v1)` returns `False` if all elements are zero |
+| **Hashing** | Vectors are hashable and can be used as dictionary keys |
+| **Copy** | Returns a copy of the vector (`v1.copy()`) |
 
 #### Vector Methods
 | Method | Description |
@@ -81,6 +88,12 @@ The `Matrix` class represents an M x N matrix.
 | **Element-wise** | Hadamard (element-wise) multiplication (`m1 * m2`) |
 | **Matrix Mul** | Standard matrix multiplication (`m1 @ m2`) |
 | **Division** | Scalar division (`m1 / scalar`) |
+| **Division** | Element-wise division (`m1 / m2`) |
+| **Floor Div** | Element-wise floor division (`m1 // m2`) |
+| **Indexing** | Access rows by index (`m1[i]`) |
+| **Iteration** | Iterate over rows (`for row in m1`) |
+| **Length** | Returns the number of rows (`len(m1)`) |
+| **Comparison** | Equality checks (`m1 == m2`, `m1 != m2`) |
 
 #### Matrix Methods
 | Method | Description |
@@ -93,14 +106,38 @@ The `Matrix` class represents an M x N matrix.
 | `.is_symmetric()` | Checks if the matrix is symmetric. |
 | `.is_diagonal()` | Checks if the matrix is diagonal. |
 | `.is_identity()` | Checks if the matrix is identity. |
+| `.is_invertible()` | Checks if the matrix is invertible. |
+| `.is_null()` | Checks if the matrix is a null matrix. |
+| `.is_skew_symmetric()` | Checks if the matrix is skew-symmetric. |
+| `.is_lower_triangular()` | Checks if the matrix is lower triangular. |
+| `.is_upper_triangular()` | Checks if the matrix is upper triangular. |
+| `.cut(i, j)` | Returns a new matrix after removing row `i` and/or column `j`. |
+| `.minor(i, j)` | Returns the minor of element `(i, j)`. |
+| `.cofactor(i, j)` | Returns the cofactor of element `(i, j)`. |
+| `.adjoint()` | Returns the adjoint of the matrix. |
+| `.inverse()` | Returns the inverse of the matrix. |
+| `.pow(p)` | Returns the matrix raised to the power `p`. |
+| `.rotate(turns)` | Rotates the matrix clockwise by 90-degree `turns`. |
 | `.copy()` | Returns a copy of the matrix. |
 | `.to_list()` | Converts the matrix to a list of lists. |
+
+#### Matrix Static Methods
+| Method | Description |
+| :--- | :--- |
+| `Matrix.identity(n)` | Returns an `n x n` identity matrix. |
+| `Matrix.zero(order)` | Returns a zero matrix of the given `order` (r, c). |
+| `Matrix.fill(val, order)` | Returns a matrix of the given `order` filled with `val`. |
 
 #### Matrix Aliases
 | Original Method | Alias |
 | :--- | :--- |
 | `.determinant()` | `.det()` |
 | `.order` | `.size` |
+| `.adjoint()` | `.adj()` |
+| `.inverse()` | `.inv()` |
+| `.is_diagonal()` | `.is_diagonal_dominant()` |
+| `.is_lower_triangular()` | `.is_lower_hessenberg()` |
+| `.is_upper_triangular()` | `.is_upper_hessenberg()` |
 
 ---
 
