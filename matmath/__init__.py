@@ -10,5 +10,5 @@ except ImportError as e:
         "Run: pip install -e . or python setup.py build_ext --inplace"
     ) from e
 
-__version__ = "4.0.0"
+__version__ = "4.0.0rc1"
 __all__ = ["Vector", "Matrix"]

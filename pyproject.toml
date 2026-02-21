@@ -1,6 +1,6 @@
 [project]
 name = "matmath"
-version = "4.0.0"
+version = "4.0.0rc1"
 description = "A simple and efficient module for matrix and vector manipulation with C extensions."
 authors = [
     {name = "Siddhesh Agarwal", email = "siddhesh.agarwal@gmail.com"}
