@@ -23,7 +23,7 @@ extensions = [
 
 setup(
     name='matmath',
-    version='4.0.0rc1',
+    version='4.0.0',
     description='A simple and efficient module for matrix and vector manipulation with C extensions.',
     long_description=open('README.md', encoding='utf-8').read(),
     long_description_content_type='text/markdown',

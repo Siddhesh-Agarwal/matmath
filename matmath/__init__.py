@@ -1,14 +1,19 @@
 """matmath - A simple and efficient module for matrix and vector manipulation with C extensions."""
 
+import warnings
+
 try:
     from matmath._vector import Vector
     from matmath._matrix import Matrix
-except ImportError as e:
-    raise ImportError(
-        "Failed to import C extensions. "
-        "Please ensure the package is properly built. "
-        "Run: pip install -e . or python setup.py build_ext --inplace"
-    ) from e
+except ImportError:
+    warnings.warn(
+        "C extensions not available. Falling back to pure Python implementation. "
+        "Performance may be reduced. Run: pip install -e . to build C extensions.",
+        ImportWarning,
+        stacklevel=2,
+    )
+    from matmath.legacy.vector import Vector
+    from matmath.legacy.matrix import Matrix
 
-__version__ = "4.0.0rc1"
+__version__ = "4.0.0"
 __all__ = ["Vector", "Matrix"]
