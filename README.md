@@ -2,7 +2,7 @@
 
 A high-performance and efficient module for matrix and vector manipulation, powered by **C extensions**.
 
-![Downloads](https://static.pepy.tech/personalized-badge/matmath?period=total&units=international_system&left_color=grey&right_color=green&left_text=Downloads)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/matmath?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/matmath)
 [![PyPI version](https://badge.fury.io/py/matmath.svg)](https://badge.fury.io/py/matmath)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
